@@ -20,7 +20,7 @@ abstract class DataDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): DataDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, DataDatabase::class.java, "parliament_member_database")
+                Room.databaseBuilder(context, DataDatabase::class.java, "parliament_members_database")
                     .build()
                     .also { Instance = it }
             }

@@ -1,7 +1,6 @@
 package com.example.parliamentmembers.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,18 +11,17 @@ import com.example.parliamentmembers.ui.screens.HomeScreen
 
 @Composable
 fun ParliamentMembersNavHost(
-    navCtrl: NavHostController,
-    modifier: Modifier = Modifier
+    navCtrl: NavHostController
 ) {
     NavHost(navController = navCtrl, startDestination = EnumScreens.HOME.name) {
         composable(route = EnumScreens.HOME.route) {
-            HomeScreen(navCtrl, modifier)
+            HomeScreen(navCtrl)
         }
         composable(route = EnumScreens.MEMBERLIST.route) { backStackEntry ->
-            MemberListScreen(navCtrl, modifier, backStackEntry)
+            MemberListScreen(navCtrl, backStackEntry)
         }
         composable(route = EnumScreens.MEMBER.route) { backStackEntry ->
-            MemberScreen(navCtrl, modifier, backStackEntry)
+            MemberScreen(navCtrl, backStackEntry)
         }
     }
 }

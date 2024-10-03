@@ -1,11 +1,24 @@
 package com.example.parliamentmembers.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
+import TopBar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -16,26 +29,33 @@ import com.example.parliamentmembers.ui.AppViewModelProvider
 @Composable
 fun MemberListScreen(
     navCtrl: NavController,
-    modifier: Modifier = Modifier,
     backStackEntry: NavBackStackEntry,
     viewModel: MemberListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val party = backStackEntry.arguments?.getString("param") ?: "default"
-    val members = listOf("mem1", "mem2", "mem3")
+    val members = List(20) { "mem${it}"}
 
-    Column {
-        Text(
-            text = "$party View",
-            modifier = modifier
-        )
-
-        Button(onClick = { navCtrl.popBackStack() }) {
-            Text(text = "Back")
-        }
-
-        members.forEach {
-            Button(onClick = { navCtrl.navigate(EnumScreens.MEMBER.withParam(it))}) {
-                Text(it)
+    Scaffold(
+        topBar = { TopBar("List", true, onNavigateUp = { navCtrl.navigateUp() }) }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues).fillMaxSize()
+        ) {
+            items(members) {
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
+                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParam(it)) }
+                ) {
+                    Text(
+                        text = it,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
         }
     }

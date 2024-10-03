@@ -10,6 +10,9 @@ import com.example.parliamentmembers.ui.screens.HomeViewModel
 import com.example.parliamentmembers.ui.screens.MemberListViewModel
 import com.example.parliamentmembers.ui.screens.MemberViewModel
 
+fun CreationExtras.pmApplication(): ParliamentMembersApplication =
+    (this[APPLICATION_KEY] as ParliamentMembersApplication)
+
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
@@ -32,6 +35,3 @@ object AppViewModelProvider {
         }
     }
 }
-
-fun CreationExtras.pmApplication(): ParliamentMembersApplication =
-    (this[APPLICATION_KEY] as ParliamentMembersApplication)
