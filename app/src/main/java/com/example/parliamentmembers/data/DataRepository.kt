@@ -9,4 +9,6 @@ interface DataRepository {
     suspend fun addParliamentMembersExtra(data: ParliamentMemberExtra)
     fun getAllParliamentMembers(): Flow<List<ParliamentMember>>
     fun getAllParliamentMembersExtra(): Flow<List<ParliamentMemberExtra>>
+    suspend fun fetchParliamentMembersData(): List<ParliamentMember>
+    suspend fun fetchParliamentMembersExtraData(): List<ParliamentMemberExtra>
 }
