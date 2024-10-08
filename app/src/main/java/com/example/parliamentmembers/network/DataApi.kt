@@ -9,5 +9,5 @@ interface DataApi {
     suspend fun getParliamentMembers(): List<ParliamentMember>
 
     @GET("extras.json")
-    suspend fun getParliamentMemberExtraInfo(): List<ParliamentMemberExtra>
+    suspend fun getParliamentMembersExtras(): List<ParliamentMemberExtra>
 }

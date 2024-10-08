@@ -10,15 +10,16 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = ParliamentMember::class,
-            parentColumns = ["hetekaId"],
-            childColumns = ["hetekaId"],
+            parentColumns = ["heteka_id"],
+            childColumns = ["heteka_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class ParliamentMemberExtra(
-    @PrimaryKey(autoGenerate = true)    val hetekaId: Int,
-    @ColumnInfo(name = "twitter")       val twitter: String,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "heteka_id")     val hetekaId: Int,
+    @ColumnInfo(name = "twitter")       val twitter: String?,
     @ColumnInfo(name = "born_year")     val bornYear: Int,
     @ColumnInfo(name = "constituency")  val constituency: String,
 )

@@ -14,7 +14,7 @@ interface DataDao {
     suspend fun addParliamentMember(data: ParliamentMember)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addParliamentMembersExtra(data: ParliamentMemberExtra)
+    suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 
     @Query("SELECT * FROM parliament_member")
     fun getAllParliamentMembers(): Flow<List<ParliamentMember>>
