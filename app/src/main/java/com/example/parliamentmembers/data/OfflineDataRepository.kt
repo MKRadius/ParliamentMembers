@@ -1,12 +1,15 @@
 package com.example.parliamentmembers.data
 
+import android.content.Context
+import androidx.work.WorkManager
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.network.RetrofitInstance
 import kotlinx.coroutines.flow.Flow
 
-class OfflineDataRepository(private val dataDao: DataDao): DataRepository {
+class OfflineDataRepository(context: Context, private val dataDao: DataDao): DataRepository {
     private val retrofitApi = RetrofitInstance.api
+    private val workManager = WorkManager.getInstance(context)
 
     override suspend fun addParliamentMember(data: ParliamentMember) = dataDao.addParliamentMember(data)
     override suspend fun addParliamentMembersExtra(data: ParliamentMemberExtra) = dataDao.addParliamentMembersExtra(data)
