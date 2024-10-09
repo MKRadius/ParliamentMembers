@@ -10,8 +10,9 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = ParliamentMember::class,
-            parentColumns = ["heteka_id"],
-            childColumns = ["heteka_id"],
+            parentColumns = arrayOf("heteka_id"),
+            childColumns = arrayOf("heteka_id"),
+            onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
     ]

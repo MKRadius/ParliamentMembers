@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.work.BackoffPolicy
 import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -45,24 +46,24 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
 
         val fetchAndUpdatePMExtraWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdatePMExtraWorker>()
             .setConstraints(constraints)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                30,
+                TimeUnit.SECONDS
+            )
             .build()
 
         WorkManager.getInstance(this)
             .beginWith(fetchAndUpdatePMWorkRequest)
-            .then(delayWorkRequest)
+//            .then(delayWorkRequest)
             .then(fetchAndUpdatePMExtraWorkRequest)
             .enqueue()
 
+
         Handler(Looper.getMainLooper()).postDelayed({
             schedulePeriodicFetchAndUpdateWork()
-        }, TimeUnit.MINUTES.toMillis(3))
+        }, TimeUnit.MINUTES.toMillis(10))
     }
-
-//    private fun scheduleNextFetch() {
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            schedulePeriodicFetchAndUpdateWork()
-//        }, TimeUnit.MINUTES.toMillis(1_800_000 ))
-//    }
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()

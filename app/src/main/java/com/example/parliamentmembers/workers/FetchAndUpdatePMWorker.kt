@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.parliamentmembers.data.DataRepository
+import com.example.parliamentmembers.model.ParliamentMember
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 class FetchAndUpdatePMWorker(
@@ -13,31 +16,41 @@ class FetchAndUpdatePMWorker(
     params: WorkerParameters,
     private val dataRepo: DataRepository
 ): CoroutineWorker(context, params) {
-
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
+            val responsePM: List<ParliamentMember>
+
             try {
-                val responsePM = dataRepo.fetchParliamentMembersData().toMutableList()
+                responsePM = dataRepo.fetchParliamentMembersData().toMutableList()
+            } catch (e: Exception) {
+                Log.e("DBG", "Error fetching PM data: ${e.message}")
+                return@withContext handleRetryOrFailure(e)
+            }
 
-                while (responsePM.isNotEmpty()) {
-                    val pm = responsePM.removeFirst()
-                    Log.d("DBG", "PM: $pm")
-                    dataRepo.addParliamentMember(pm)
-                }
-
-                Log.d("DBG", "SUCCESS: Fetched and updated PM data")
-                Result.success()
+            try {
+//                responsePM.forEach { dataRepo.addParliamentMemberExtra(it) }
+                responsePM.map {
+                    async { dataRepo.addParliamentMember(it) }
+                }.awaitAll()
 
             } catch (e: Exception) {
-                Log.e("DBG", "Error: ${e.message}")
-                if (runAttemptCount < 5) {
-                    Log.e("DBG", "Retry attempt: $runAttemptCount")
-                    Result.retry()
-                } else {
-                    Log.e("DBG", "Failure after retry: ${e.message}")
-                    Result.failure()
-                }
+                Log.e("DBG", "Failed to add PM data to DB | Error: ${e.message}")
+                return@withContext handleRetryOrFailure(e)
             }
+
+            Log.d("DBG", "SUCCESS: Fetched and updated PM data")
+            return@withContext Result.success()
+        }
+    }
+
+    private fun handleRetryOrFailure(e: Exception): Result {
+        return if (runAttemptCount < 2) {
+            Log.e("DBG", "Retrying... attempt: $runAttemptCount | Error: ${e.message}")
+            Result.retry()
+        }
+        else {
+            Log.e("DBG", "Exceeded retries. Failing | Error: ${e.message}")
+            Result.failure()
         }
     }
 }

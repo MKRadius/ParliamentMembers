@@ -10,10 +10,16 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DataDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = ParliamentMember::class, onConflict = OnConflictStrategy.REPLACE)
+    fun addAllPM(data: List<ParliamentMember>)
+
+    @Insert(entity = ParliamentMemberExtra::class, onConflict = OnConflictStrategy.REPLACE)
+    fun addAllPME(data: List<ParliamentMemberExtra>)
+
+    @Insert(entity = ParliamentMember::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParliamentMember(data: ParliamentMember)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = ParliamentMemberExtra::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 
     @Query("SELECT * FROM parliament_member")
@@ -21,4 +27,10 @@ interface DataDao {
 
     @Query("SELECT * FROM parliament_member_extra")
     fun getAllParliamentMembersExtra(): Flow<List<ParliamentMemberExtra>>
+
+    @Query("SELECT * FROM parliament_member WHERE heteka_id = :id")
+    fun getMemberWithId(id: Int): Flow<ParliamentMember>
+
+    @Query("SELECT * FROM parliament_member_extra WHERE heteka_id = :id")
+    fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
 }
