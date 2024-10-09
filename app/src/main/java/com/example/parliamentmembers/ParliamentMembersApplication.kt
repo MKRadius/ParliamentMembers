@@ -14,10 +14,13 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.parliamentmembers.data.AppContainer
 import com.example.parliamentmembers.data.AppDataContainer
+import com.example.parliamentmembers.workers.CombinedWorker
 import com.example.parliamentmembers.workers.CustomWorkerFactory
 import com.example.parliamentmembers.workers.DelayWorker
 import com.example.parliamentmembers.workers.FetchAndUpdatePMExtraWorker
 import com.example.parliamentmembers.workers.FetchAndUpdatePMWorker
+import com.example.parliamentmembers.workers.FetchDataWorker
+import com.example.parliamentmembers.workers.UpdateDBWorker
 import java.util.concurrent.TimeUnit
 
 
@@ -37,32 +40,46 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        val fetchAndUpdatePMWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdatePMWorker>()
-            .setConstraints(constraints)
-            .build()
+//        val fetchAndUpdatePMWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdatePMWorker>()
+//            .setConstraints(constraints)
+//            .build()
+//
+//        val delayWorkRequest = OneTimeWorkRequestBuilder<DelayWorker>()
+//            .build()
+//
+//        val fetchAndUpdatePMExtraWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdatePMExtraWorker>()
+//            .setConstraints(constraints)
+//            .setBackoffCriteria(
+//                BackoffPolicy.LINEAR,
+//                30,
+//                TimeUnit.SECONDS
+//            )
+//            .build()
+//
+//        WorkManager.getInstance(this)
+//            .beginWith(fetchAndUpdatePMWorkRequest)
+////            .then(delayWorkRequest)
+//            .then(fetchAndUpdatePMExtraWorkRequest)
+//            .enqueue()
 
-        val delayWorkRequest = OneTimeWorkRequestBuilder<DelayWorker>()
-            .build()
+//        val fetchDataWorkRequest = OneTimeWorkRequestBuilder<FetchDataWorker>()
+//            .setConstraints(constraints)
+//            .build()
+//
+//        val updateDataWorkRequest = OneTimeWorkRequestBuilder<UpdateDBWorker>()
+//            .setConstraints(constraints)
+//            .build()
 
-        val fetchAndUpdatePMExtraWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdatePMExtraWorker>()
+        val combinedWorkRequest = OneTimeWorkRequestBuilder<CombinedWorker>()
             .setConstraints(constraints)
-            .setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                30,
-                TimeUnit.SECONDS
-            )
             .build()
 
         WorkManager.getInstance(this)
-            .beginWith(fetchAndUpdatePMWorkRequest)
-//            .then(delayWorkRequest)
-            .then(fetchAndUpdatePMExtraWorkRequest)
-            .enqueue()
-
+            .enqueue(combinedWorkRequest)
 
         Handler(Looper.getMainLooper()).postDelayed({
             schedulePeriodicFetchAndUpdateWork()
-        }, TimeUnit.MINUTES.toMillis(10))
+        }, TimeUnit.MINUTES.toMillis(1))
     }
 
     override val workManagerConfiguration: Configuration

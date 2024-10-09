@@ -1,6 +1,7 @@
 package com.example.parliamentmembers.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,6 +9,7 @@ import com.example.parliamentmembers.ParliamentMembersApplication
 import com.example.parliamentmembers.data.DataDao
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
+import java.util.concurrent.Executors
 import kotlin.concurrent.Volatile
 
 @Database(entities = [ParliamentMember::class, ParliamentMemberExtra::class], version = 1, exportSchema = false)
@@ -21,6 +23,9 @@ abstract class DataDatabase : RoomDatabase() {
         fun getDatabase(context: Context): DataDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, DataDatabase::class.java, "parliament_members_database")
+                    .setQueryCallback({ sqlQuery, bindArgs ->
+                        Log.d("RoomQuery", "SQL Query: $sqlQuery, Args: $bindArgs")
+                    }, Executors.newSingleThreadExecutor())
                     .build()
                     .also { Instance = it }
             }
