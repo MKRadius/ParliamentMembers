@@ -6,21 +6,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
+import com.example.parliamentmembers.model.ParliamentMemberLocal
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DataDao {
     @Insert(entity = ParliamentMember::class, onConflict = OnConflictStrategy.REPLACE)
-    fun addAllPM(data: List<ParliamentMember>)
-
-    @Insert(entity = ParliamentMemberExtra::class, onConflict = OnConflictStrategy.REPLACE)
-    fun addAllPME(data: List<ParliamentMemberExtra>)
-
-    @Insert(entity = ParliamentMember::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParliamentMember(data: ParliamentMember)
 
     @Insert(entity = ParliamentMemberExtra::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
+
+    @Insert(entity = ParliamentMemberLocal::class, onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addEntryWithId(data: ParliamentMemberLocal)
 
     @Query("SELECT * FROM parliament_member")
     fun getAllParliamentMembers(): Flow<List<ParliamentMember>>
@@ -33,4 +31,13 @@ interface DataDao {
 
     @Query("SELECT * FROM parliament_member_extra WHERE heteka_id = :id")
     fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
+
+    @Query("SELECT DISTINCT party FROM parliament_member")
+    fun getParties(): Flow<List<String>>
+
+    @Query("SELECT * FROM parliament_member WHERE party = :party")
+    fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>>
+
+    @Query("SELECT heteka_id FROM parliament_member")
+    fun getAllPMIds(): Flow<List<Int>>
 }

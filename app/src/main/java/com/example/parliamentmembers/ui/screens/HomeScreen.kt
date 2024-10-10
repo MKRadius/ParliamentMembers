@@ -14,26 +14,34 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.ui.AppViewModelProvider
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     navCtrl: NavController,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    homeVM: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     // TO DO: HomeScreen for updating PM information (loading screen)
     // Nav to PartyScreen when done fetching
     // PartyScreen doesnt have back button, others do
 
-    val parties = listOf("party1", "party2", "party3")
+    val parties: List<String> by homeVM.parties.collectAsState()
 
     Scaffold(
         topBar = { TopBar("", false, onNavigateUp = { navCtrl.navigateUp() }) }
@@ -50,7 +58,7 @@ fun HomeScreen(
                         .clickable { navCtrl.navigate(EnumScreens.MEMBERLIST.withParam(it)) }
                 ) {
                     Text(
-                        text = it,
+                        text = it.uppercase(),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -60,8 +68,15 @@ fun HomeScreen(
 }
 
 class HomeViewModel(
-    private val dataRepo: DataRepository,
+    dataRepo: DataRepository,
 ): ViewModel() {
+    private val _parties = MutableStateFlow<List<String>>(listOf(""))
+    val parties: StateFlow<List<String>> = _parties
 
+    init {
+        viewModelScope.launch {
+            dataRepo.getParties().collect { _parties.value = it }
+        }
+    }
 }
 

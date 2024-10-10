@@ -15,12 +15,7 @@ class CustomWorkerFactory(
         workerParameters: WorkerParameters
     ): ListenableWorker? {
         return when (workerClassName) {
-            FetchAndUpdatePMWorker::class.java.name         -> FetchAndUpdatePMWorker(context, workerParameters, dataRepo)
-            FetchAndUpdatePMExtraWorker::class.java.name    -> FetchAndUpdatePMExtraWorker(context, workerParameters, dataRepo)
-            DelayWorker::class.java.name                    -> DelayWorker(context, workerParameters)
-            FetchDataWorker::class.java.name                -> FetchDataWorker(context, workerParameters, dataRepo)
-            UpdateDBWorker::class.java.name                 -> UpdateDBWorker(context, workerParameters, dataRepo)
-            CombinedWorker::class.java.name                 -> CombinedWorker(context, workerParameters, dataRepo)
+            FetchAndUpdateDBWorker::class.java.name -> FetchAndUpdateDBWorker(context, workerParameters, dataRepo)
             else -> null
         }
     }

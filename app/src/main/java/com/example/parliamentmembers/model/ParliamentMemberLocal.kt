@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "parliament_member_extra",
+    tableName = "parliament_member_local",
     foreignKeys = [
         ForeignKey(
             entity = ParliamentMember::class,
@@ -19,10 +19,9 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index(value = ["heteka_id"])]
 )
-data class ParliamentMemberExtra(
+data class ParliamentMemberLocal(
     @PrimaryKey
     @ColumnInfo(name = "heteka_id")     val hetekaId: Int,
-    @ColumnInfo(name = "twitter")       val twitter: String?,
-    @ColumnInfo(name = "born_year")     val bornYear: Int,
-    @ColumnInfo(name = "constituency")  val constituency: String,
+    @ColumnInfo(name = "favorite")      val favorite: Boolean,
+    @ColumnInfo(name = "note")          val note: String?,
 )

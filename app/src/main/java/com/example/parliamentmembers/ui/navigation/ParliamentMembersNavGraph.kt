@@ -20,8 +20,8 @@ fun ParliamentMembersNavHost(
         composable(route = EnumScreens.MEMBERLIST.route) { backStackEntry ->
             MemberListScreen(navCtrl, backStackEntry)
         }
-        composable(route = EnumScreens.MEMBER.route) { backStackEntry ->
-            MemberScreen(navCtrl, backStackEntry)
+        composable(route = EnumScreens.MEMBER.route) {
+            MemberScreen(navCtrl)
         }
     }
 }

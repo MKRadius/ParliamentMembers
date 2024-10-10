@@ -23,7 +23,8 @@ object AppViewModelProvider {
 
         initializer {
             MemberListViewModel(
-                pmApplication().container.dataRepo
+                this.createSavedStateHandle(),
+                pmApplication().container.dataRepo,
             )
         }
 

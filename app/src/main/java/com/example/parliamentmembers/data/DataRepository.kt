@@ -6,9 +6,6 @@ import com.example.parliamentmembers.model.ParliamentMemberExtra
 import kotlinx.coroutines.flow.Flow
 
 interface DataRepository {
-    fun addAllPM(data: List<ParliamentMember>)
-    fun addAllPME(data: List<ParliamentMemberExtra>)
-
     suspend fun addParliamentMember(data: ParliamentMember)
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 
@@ -20,4 +17,11 @@ interface DataRepository {
 
     fun getMemberWithId(id: Int): Flow<ParliamentMember>
     fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
+
+    fun getParties(): Flow<List<String>>
+
+    fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>>
+
+    suspend fun addEntryWithId(id: Int)
+    fun getAllPMIds(): Flow<List<Int>>
 }

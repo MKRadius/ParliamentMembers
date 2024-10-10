@@ -2,11 +2,15 @@ package com.example.parliamentmembers.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "parliament_member")
+@Entity(
+    tableName = "parliament_member",
+    indices = [Index(value = ["heteka_id"], unique = true)]
+)
 data class ParliamentMember(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "heteka_id")     val hetekaId: Int,
     @ColumnInfo(name = "seat_number")   val seatNumber: Int,
     @ColumnInfo(name = "last_name")     val lastname: String,
