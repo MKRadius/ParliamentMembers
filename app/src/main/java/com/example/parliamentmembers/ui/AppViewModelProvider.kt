@@ -9,6 +9,7 @@ import com.example.parliamentmembers.ParliamentMembersApplication
 import com.example.parliamentmembers.ui.screens.HomeViewModel
 import com.example.parliamentmembers.ui.screens.MemberListViewModel
 import com.example.parliamentmembers.ui.screens.MemberViewModel
+import com.example.parliamentmembers.ui.screens.NoteViewModel
 
 fun CreationExtras.pmApplication(): ParliamentMembersApplication =
     (this[APPLICATION_KEY] as ParliamentMembersApplication)
@@ -30,6 +31,13 @@ object AppViewModelProvider {
 
         initializer {
             MemberViewModel(
+                this.createSavedStateHandle(),
+                pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            NoteViewModel(
                 this.createSavedStateHandle(),
                 pmApplication().container.dataRepo
             )

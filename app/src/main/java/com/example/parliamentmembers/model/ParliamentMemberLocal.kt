@@ -21,7 +21,7 @@ import androidx.room.PrimaryKey
 )
 data class ParliamentMemberLocal(
     @PrimaryKey
-    @ColumnInfo(name = "heteka_id")     val hetekaId: Int,
-    @ColumnInfo(name = "favorite")      val favorite: Boolean,
-    @ColumnInfo(name = "note")          val note: String?,
+    @ColumnInfo(name = "heteka_id") val hetekaId: Int,
+    @ColumnInfo(name = "favorite") val favorite: Boolean,
+    @ColumnInfo(name = "note") val note: String?,
 )

@@ -1,7 +1,6 @@
 package com.example.parliamentmembers.data
 
 import android.content.Context
-import com.example.parliamentmembers.database.DataDatabase
 
 interface AppContainer {
     val dataRepo: DataRepository

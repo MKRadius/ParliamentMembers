@@ -8,6 +8,7 @@ import com.example.parliamentmembers.ui.screens.EnumScreens
 import com.example.parliamentmembers.ui.screens.MemberListScreen
 import com.example.parliamentmembers.ui.screens.MemberScreen
 import com.example.parliamentmembers.ui.screens.HomeScreen
+import com.example.parliamentmembers.ui.screens.NoteScreen
 
 @Composable
 fun ParliamentMembersNavHost(
@@ -22,6 +23,9 @@ fun ParliamentMembersNavHost(
         }
         composable(route = EnumScreens.MEMBER.route) {
             MemberScreen(navCtrl)
+        }
+        composable(route = EnumScreens.NOTE.route) {
+            NoteScreen(navCtrl)
         }
     }
 }

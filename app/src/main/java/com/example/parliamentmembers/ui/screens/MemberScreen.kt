@@ -1,6 +1,7 @@
 package com.example.parliamentmembers.ui.screens
 
 import TopBar
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,27 +9,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,14 +38,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.parliamentmembers.R
 import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.model.ParliamentMember
+import com.example.parliamentmembers.model.ParliamentMemberExtra
+import com.example.parliamentmembers.model.ParliamentMemberLocal
 import com.example.parliamentmembers.ui.AppViewModelProvider
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,17 +57,33 @@ fun MemberScreen(
     navCtrl: NavController,
     memberVM: MemberViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
+    val scrollState = rememberScrollState()
     val member: ParliamentMember by memberVM.member.collectAsState()
-    var noteText by remember { mutableStateOf("") }
+    val memberExtra: ParliamentMemberExtra by memberVM.memberExtra.collectAsState()
+    val memberLocal: ParliamentMemberLocal by memberVM.memberLocal.collectAsState()
+
+    LaunchedEffect(navBackStackEntry) { memberVM.getData() }
 
     Scaffold(
-        topBar = { TopBar("", true, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = {
+            TopBar(
+                title = "",
+                canNavigateBack = true,
+                onNavigateUp = { navCtrl.navigateUp() }
+            )
+        }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth()
+                .padding(8.dp)
+                .verticalScroll(scrollState)
         ) {
             Box(
                 modifier = Modifier
+                    .padding(4.dp)
                     .fillMaxWidth()
                     .height(500.dp)
                     .clip(RoundedCornerShape(20.dp))
@@ -197,6 +212,85 @@ fun MemberScreen(
                 }
             }
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(4.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
+                        .padding(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Born Year",
+                            color = Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "${memberExtra.bornYear}",
+                            color = Color.Gray,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(4.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
+                        .padding(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Constituency",
+                            color = Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "${memberExtra.constituency}",
+                            color = Color.Gray,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+
+            if (!memberExtra.twitter.isNullOrEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Twitter",
+                            color = Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text("X")
+                    }
+                }
+            }
+
             Box(
                 modifier = Modifier
                     .padding(4.dp)
@@ -209,57 +303,59 @@ fun MemberScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Mark as favorite")
+                    Text(
+                        text = "Mark as favorite",
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                     Text("M")
                 }
             }
 
+            Box(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Note",
+                            color = Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            if (memberLocal.note.isNullOrEmpty()) "+" else "Edit",
+                            modifier = Modifier.clickable {
+                                navCtrl.navigate(EnumScreens.NOTE.withParam(member.hetekaId.toString()))
+                            }
+                        )
+                    }
 
+                    if (!memberLocal.note.isNullOrEmpty()) {
+                        HorizontalDivider(
+                            color = Color.Gray,
+                            thickness = 1.dp,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-//            Row(
-//                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-//                horizontalArrangement = Arrangement.Center,
-//            ) {
-//                Text(
-//                    text = "↑",
-//                    modifier = Modifier.clickable { /* Handle upvote action */ }
-//                )
-//                Text(text = "10", modifier = Modifier.padding(horizontal = 8.dp))
-//                Text(
-//                    text = "↓",
-//                    modifier = Modifier.clickable { /* Handle downvote action */ }
-//                )
-//            }
-//
-//            Column(
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(vertical = 8.dp)
-//                        .background(Color.LightGray)
-//                        .border(1.dp, Color.Black)
-//                        .padding(16.dp),
-//                    contentAlignment = Alignment.CenterStart
-//                ) {
-//                    Text(text = "Note 1")
-//                    Text(
-//                        text = "✖",
-//                        modifier = Modifier.padding(start = 8.dp).align(Alignment.CenterEnd)
-//                            .clickable { /* Handle remove action */ }
-//                    )
-//                }
-//
-//                Button(
-//                    onClick = { /* Handle add note action */ },
-//                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
-//                ) {
-//                    Text(text = "Add Note", modifier = Modifier.align(Alignment.CenterVertically))
-//                }
+                        Text(
+                            text = memberLocal.note!!,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+            }
         }
     }
-
 }
 
 class MemberViewModel(
@@ -278,11 +374,35 @@ class MemberViewModel(
             ""
         )
     )
-    val member: StateFlow<ParliamentMember> = _member
+    private val _memberExtra = MutableStateFlow<ParliamentMemberExtra>(
+        ParliamentMemberExtra(
+            0,
+            null,
+            0,
+            ""
+        )
+    )
+    private val _memberLocal = MutableStateFlow<ParliamentMemberLocal>(
+        ParliamentMemberLocal(
+            0,
+            false,
+            null
+        )
+    )
 
-    init {
-        viewModelScope.launch {
-            dataRepo.getMemberWithId(hetekaId!!.toInt()).collect { _member.value = it }
-        }
+    val member: StateFlow<ParliamentMember> = _member
+    val memberExtra: StateFlow<ParliamentMemberExtra> = _memberExtra
+    val memberLocal: StateFlow<ParliamentMemberLocal> = _memberLocal
+
+    init { getData() }
+
+    fun getData() = viewModelScope.launch {
+        val memberFlow = async { dataRepo.getMemberWithId(hetekaId!!.toInt()).first() }
+        val memberExtraFlow = async { dataRepo.getMemberExtraWithId(hetekaId!!.toInt()).first() }
+        val memberLocalFlow = async { dataRepo.getMemberLocalWithId(hetekaId!!.toInt()).first() }
+
+        _member.emit(memberFlow.await())
+        _memberExtra.emit(memberExtraFlow.await())
+        _memberLocal.emit(memberLocalFlow.await())
     }
 }

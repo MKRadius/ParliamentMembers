@@ -1,21 +1,12 @@
 package com.example.parliamentmembers.data
 
 import android.content.Context
-import android.util.Log
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.work.ListenableWorker
-import androidx.work.WorkManager
 import com.example.parliamentmembers.database.DataDatabase
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.model.ParliamentMemberLocal
 import com.example.parliamentmembers.network.RetrofitInstance
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 
 class OfflineDataRepository(context: Context): DataRepository {
     private val retrofitApi = RetrofitInstance.api
@@ -32,10 +23,16 @@ class OfflineDataRepository(context: Context): DataRepository {
 
     override fun getMemberWithId(id: Int): Flow<ParliamentMember> = dataDao.getMemberWithId(id)
     override fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra> = dataDao.getMemberExtraWithId(id)
+    override fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal> = dataDao.getMemberLocalWithId(id)
 
     override fun getParties(): Flow<List<String>> = dataDao.getParties()
     override fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>> = dataDao.getAllPMWithParty(party)
 
-    override suspend fun addEntryWithId(id: Int) = dataDao.addEntryWithId(ParliamentMemberLocal(id, false, null))
+    override fun getEntryById(id: Int): Flow<ParliamentMemberLocal?> = dataDao.getEntryById(id)
+
+    override suspend fun addEntry(data: ParliamentMemberLocal) = dataDao.addEntry(data)
     override fun getAllPMIds(): Flow<List<Int>> = dataDao.getAllPMIds()
+
+    override suspend fun updateNoteWithId(id: Int, note: String?) = dataDao.updateNoteWithId(id, note)
+    override suspend fun deleteNoteWithId(id: Int) = dataDao.deleteNoteWithId(id)
 }

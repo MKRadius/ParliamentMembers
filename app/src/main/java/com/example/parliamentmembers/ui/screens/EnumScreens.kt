@@ -3,7 +3,8 @@ package com.example.parliamentmembers.ui.screens
 enum class EnumScreens(val route: String) {
     HOME("home"),
     MEMBERLIST("memberlist/{param}"),
-    MEMBER("member/{param}");
+    MEMBER("member/{param}"),
+    NOTE("note/{param}");
 
     fun withParam(vararg args: String): String {
         return buildString {

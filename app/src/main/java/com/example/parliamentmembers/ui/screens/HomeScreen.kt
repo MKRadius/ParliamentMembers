@@ -37,10 +37,6 @@ fun HomeScreen(
     navCtrl: NavController,
     homeVM: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // TO DO: HomeScreen for updating PM information (loading screen)
-    // Nav to PartyScreen when done fetching
-    // PartyScreen doesnt have back button, others do
-
     val parties: List<String> by homeVM.parties.collectAsState()
 
     Scaffold(
@@ -52,7 +48,9 @@ fun HomeScreen(
         ) {
             items(parties) {
                 Box(
-                    modifier = Modifier.padding(8.dp).size(120.dp)
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(120.dp)
                         .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
                         .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                         .clickable { navCtrl.navigate(EnumScreens.MEMBERLIST.withParam(it)) }
@@ -68,14 +66,14 @@ fun HomeScreen(
 }
 
 class HomeViewModel(
-    dataRepo: DataRepository,
+    private val dataRepo: DataRepository,
 ): ViewModel() {
     private val _parties = MutableStateFlow<List<String>>(listOf(""))
     val parties: StateFlow<List<String>> = _parties
 
     init {
         viewModelScope.launch {
-            dataRepo.getParties().collect { _parties.value = it }
+            dataRepo.getParties().collect { _parties.emit(it) }
         }
     }
 }

@@ -17,8 +17,11 @@ interface DataDao {
     @Insert(entity = ParliamentMemberExtra::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 
-    @Insert(entity = ParliamentMemberLocal::class, onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addEntryWithId(data: ParliamentMemberLocal)
+    @Insert(entity = ParliamentMemberLocal::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addEntry(data: ParliamentMemberLocal)
+
+    @Query("SELECT * FROM parliament_member_local WHERE heteka_id = :id LIMIT 1")
+    fun getEntryById(id: Int): Flow<ParliamentMemberLocal?>
 
     @Query("SELECT * FROM parliament_member")
     fun getAllParliamentMembers(): Flow<List<ParliamentMember>>
@@ -32,6 +35,9 @@ interface DataDao {
     @Query("SELECT * FROM parliament_member_extra WHERE heteka_id = :id")
     fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
 
+    @Query("SELECT * FROM parliament_member_local WHERE heteka_id = :id")
+    fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal>
+
     @Query("SELECT DISTINCT party FROM parliament_member")
     fun getParties(): Flow<List<String>>
 
@@ -40,4 +46,10 @@ interface DataDao {
 
     @Query("SELECT heteka_id FROM parliament_member")
     fun getAllPMIds(): Flow<List<Int>>
+
+    @Query("UPDATE parliament_member_local SET note = :note WHERE heteka_id = :id")
+    suspend fun updateNoteWithId(id: Int, note: String?)
+
+    @Query("UPDATE parliament_member_local SET note = NULL WHERE heteka_id = :id")
+    suspend fun deleteNoteWithId(id: Int)
 }

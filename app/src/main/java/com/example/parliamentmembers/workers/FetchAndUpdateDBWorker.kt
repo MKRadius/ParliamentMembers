@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
+import com.example.parliamentmembers.model.ParliamentMemberLocal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -41,7 +42,16 @@ class FetchAndUpdateDBWorker(
             try {
                 dataRepo.addParliamentMember(data.first)
                 if (data.second != null) dataRepo.addParliamentMemberExtra(data.second!!)
-                dataRepo.addEntryWithId(data.first.hetekaId)
+
+                var existingEntry = ParliamentMemberLocal(0, false, null)
+                dataRepo.getEntryById(data.first.hetekaId).collect { it?.let { existingEntry = it } }
+
+                val newEntry = ParliamentMemberLocal(
+                    hetekaId = 0,
+                    favorite = false,
+                    note = existingEntry.note
+                )
+                dataRepo.addEntry(newEntry)
             }
             catch (e: Exception) {
                 Log.e("DBG", "Failed to add ParliamentMemberExtra: $data | Error: ${e.message}")

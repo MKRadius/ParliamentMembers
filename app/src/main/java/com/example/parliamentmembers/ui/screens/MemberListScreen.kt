@@ -73,7 +73,7 @@ fun MemberListScreen(
 
 class MemberListViewModel(
     savedStateHandle: SavedStateHandle,
-    dataRepo: DataRepository,
+    private val dataRepo: DataRepository,
 ): ViewModel() {
     private var party: String? = savedStateHandle.get<String>("param")
     private val _pmList = MutableStateFlow<List<ParliamentMember>>(listOf())
@@ -81,7 +81,7 @@ class MemberListViewModel(
 
     init {
         viewModelScope.launch {
-            dataRepo.getAllPMWithParty(party!!).collect { _pmList.value = it }
+            dataRepo.getAllPMWithParty(party!!).collect { _pmList.emit(it) }
         }
     }
 }
