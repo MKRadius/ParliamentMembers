@@ -1,4 +1,4 @@
-package com.example.parliamentmembers.ui
+package com.example.parliamentmembers.ui.viewmodels
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
@@ -6,10 +6,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.parliamentmembers.ParliamentMembersApplication
-import com.example.parliamentmembers.ui.screens.HomeViewModel
-import com.example.parliamentmembers.ui.screens.MemberListViewModel
-import com.example.parliamentmembers.ui.screens.MemberViewModel
-import com.example.parliamentmembers.ui.screens.NoteViewModel
 
 fun CreationExtras.pmApplication(): ParliamentMembersApplication =
     (this[APPLICATION_KEY] as ParliamentMembersApplication)

@@ -25,7 +25,20 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
         super.onCreate()
         container = AppDataContainer(this)
         WorkManager.initialize(this, workManagerConfiguration)
+        updateDataOnCreate()
         schedulePeriodicFetchAndUpdateWork()
+    }
+
+    private fun updateDataOnCreate() {
+        val fetchAndUpdateDBWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdateDBWorker>()
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .build()
+
+        WorkManager.getInstance(this).enqueue(fetchAndUpdateDBWorkRequest)
     }
 
     private fun schedulePeriodicFetchAndUpdateWork() {
@@ -34,25 +47,15 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
             .setRequiresBatteryNotLow(true)
             .build()
 
-//        val fetchAndUpdateDBWorker = PeriodicWorkRequestBuilder<FetchAndUpdateDBWorker>(60, TimeUnit.MINUTES)
-//            .setConstraints(constraints)
-//            .build()
-//
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "FetchAndUpdateDBWorker",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            fetchAndUpdateDBWorker
-//        )
-
-        val fetchAndUpdateDBWorker = OneTimeWorkRequestBuilder<FetchAndUpdateDBWorker>()
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<FetchAndUpdateDBWorker>(24, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build()
 
-        WorkManager.getInstance(this).enqueue(fetchAndUpdateDBWorker)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            schedulePeriodicFetchAndUpdateWork()
-        }, TimeUnit.MINUTES.toMillis(1))
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "FetchAndUpdateDBWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            periodicWorkRequest
+        )
     }
 
     override val workManagerConfiguration: Configuration

@@ -2,16 +2,13 @@ package com.example.parliamentmembers.ui.screens
 
 enum class EnumScreens(val route: String) {
     HOME("home"),
-    MEMBERLIST("memberlist/{param}"),
+    MEMBERLIST("memberlist/{type}/{name}"),
     MEMBER("member/{param}"),
     NOTE("note/{param}");
 
-    fun withParam(vararg args: String): String {
-        return buildString {
-            append(route.substringBefore("/{"))
-            args.forEach { arg ->
-                append("/$arg")
-            }
-        }
+    fun withParams(vararg args: String): String {
+        var updatedRoute = route
+        args.forEach { updatedRoute = updatedRoute.replaceFirst(Regex("\\{[^}]+\\}"), it) }
+        return updatedRoute
     }
 }

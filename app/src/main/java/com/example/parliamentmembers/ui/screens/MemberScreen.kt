@@ -3,7 +3,6 @@ package com.example.parliamentmembers.ui.screens
 import TopBar
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +24,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -52,21 +49,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.parliamentmembers.R
 import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.model.ParliamentMemberLocal
-import com.example.parliamentmembers.ui.AppViewModelProvider
-import kotlinx.coroutines.async
+import com.example.parliamentmembers.ui.viewmodels.AppViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.example.parliamentmembers.ui.viewmodels.MemberViewModel
 
 
 @Composable
@@ -397,8 +392,10 @@ fun MemberScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Box(
-                            modifier = Modifier.clickable {
-                                navCtrl.navigate(EnumScreens.NOTE.withParam(member.hetekaId.toString()))
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                navCtrl.navigate(EnumScreens.NOTE.withParams(member.hetekaId.toString()))
                             }
                         ) {
                             Icon(
@@ -424,72 +421,5 @@ fun MemberScreen(
                 }
             }
         }
-    }
-}
-
-class MemberViewModel(
-    savedStateHandle: SavedStateHandle,
-    private val dataRepo: DataRepository,
-): ViewModel() {
-    private var hetekaId: String? = savedStateHandle.get<String>("param")
-    private val _member = MutableStateFlow<ParliamentMember>(
-        ParliamentMember(
-            0,
-            0,
-            "lastname",
-            "firstname",
-            "party",
-            false,
-            ""
-        )
-    )
-    private val _memberExtra = MutableStateFlow<ParliamentMemberExtra>(
-        ParliamentMemberExtra(
-            0,
-            null,
-            0,
-            ""
-        )
-    )
-    private val _memberLocal = MutableStateFlow<ParliamentMemberLocal>(
-        ParliamentMemberLocal(
-            0,
-            false,
-            null
-        )
-    )
-
-    val member: StateFlow<ParliamentMember> = _member
-    val memberExtra: StateFlow<ParliamentMemberExtra> = _memberExtra
-    val memberLocal: StateFlow<ParliamentMemberLocal> = _memberLocal
-
-    init { getData() }
-
-    fun getData() = viewModelScope.launch {
-        fetchMember()
-        fetchMemberExtra()
-        fetchMemberLocal()
-    }
-
-    private suspend fun fetchMember() {
-        val member = dataRepo.getMemberWithId(hetekaId!!.toInt()).first()
-        _member.emit(member)
-    }
-
-    private suspend fun fetchMemberExtra() {
-        val memberExtra = dataRepo.getMemberExtraWithId(hetekaId!!.toInt()).first()
-        _memberExtra.emit(memberExtra)
-    }
-
-    private suspend fun fetchMemberLocal() {
-        val memberLocal = dataRepo.getMemberLocalWithId(hetekaId!!.toInt()).first()
-        if (memberLocal != null) {
-            _memberLocal.emit(memberLocal)
-        }
-    }
-
-    fun changeFavorite(id: Int) = viewModelScope.launch {
-        dataRepo.toggleFavorite(id)
-        fetchMemberLocal()
     }
 }

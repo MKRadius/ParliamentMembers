@@ -1,7 +1,6 @@
 package com.example.parliamentmembers.ui.screens
 
 import TopBar
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,7 +50,8 @@ import coil.request.ImageRequest
 import com.example.parliamentmembers.R
 import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.model.ParliamentMember
-import com.example.parliamentmembers.ui.AppViewModelProvider
+import com.example.parliamentmembers.ui.viewmodels.AppViewModelProvider
+import com.example.parliamentmembers.ui.viewmodels.MemberListViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -66,13 +66,13 @@ fun MemberListScreen(
     val imgBaseUrl = "https://avoindata.eduskunta.fi/"
     val context = LocalContext.current
     val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
-    val party = backStackEntry.arguments?.getString("param") ?: "Members"
+    val name = backStackEntry.arguments?.getString("name") ?: "Members"
     val pmList: List<Pair<ParliamentMember, Boolean>> by memListVM.pmList.collectAsState()
 
     LaunchedEffect(navBackStackEntry) { memListVM.getPMList() }
 
     Scaffold(
-        topBar = { TopBar(party.uppercase(), true, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = { TopBar(name.uppercase(), true, onNavigateUp = { navCtrl.navigateUp() }) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues).fillMaxSize()
@@ -86,7 +86,7 @@ fun MemberListScreen(
                         .height(100.dp)
                         .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
                         .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParam(it.first.hetekaId.toString())) }
+                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParams(it.first.hetekaId.toString())) }
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(16.dp)
@@ -149,33 +149,5 @@ fun MemberListScreen(
                 }
             }
         }
-    }
-}
-
-class MemberListViewModel(
-    savedStateHandle: SavedStateHandle,
-    private val dataRepo: DataRepository,
-): ViewModel() {
-    private var party: String? = savedStateHandle.get<String>("param")
-    private val _pmList = MutableStateFlow<List<Pair<ParliamentMember, Boolean>>>(listOf())
-    val pmList: StateFlow<List<Pair<ParliamentMember, Boolean>>> = _pmList
-
-    init { getPMList() }
-
-    fun getPMList() = viewModelScope.launch {
-        dataRepo.getAllPMWithParty(party!!).collect { pmList ->
-            val pmWithFavorites = pmList.map { member ->
-                val isFavorite = dataRepo.getFavoriteById(member.hetekaId).firstOrNull() ?: false
-                Pair(member, isFavorite)
-            }
-            _pmList.emit(pmWithFavorites)
-        }
-
-        Log.d("DBG", "$pmList")
-    }
-
-    fun changeFavorite(id: Int) = viewModelScope.launch {
-        dataRepo.toggleFavorite(id)
-        getPMList()
     }
 }
