@@ -1,8 +1,6 @@
 package com.example.parliamentmembers
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.work.Configuration
 import androidx.work.Constraints
@@ -16,7 +14,6 @@ import com.example.parliamentmembers.data.AppDataContainer
 import com.example.parliamentmembers.workers.CustomWorkerFactory
 import com.example.parliamentmembers.workers.FetchAndUpdateDBWorker
 import java.util.concurrent.TimeUnit
-
 
 class ParliamentMembersApplication: Application(), Configuration.Provider {
    lateinit var container: AppContainer
@@ -64,4 +61,3 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
             .setWorkerFactory(CustomWorkerFactory(container.dataRepo))
             .build()
 }
-
