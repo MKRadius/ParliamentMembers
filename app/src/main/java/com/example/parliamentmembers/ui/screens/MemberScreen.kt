@@ -483,7 +483,9 @@ class MemberViewModel(
 
     private suspend fun fetchMemberLocal() {
         val memberLocal = dataRepo.getMemberLocalWithId(hetekaId!!.toInt()).first()
-        _memberLocal.emit(memberLocal)
+        if (memberLocal != null) {
+            _memberLocal.emit(memberLocal)
+        }
     }
 
     fun changeFavorite(id: Int) = viewModelScope.launch {

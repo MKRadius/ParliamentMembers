@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -42,7 +44,7 @@ fun NoteScreen(
 ) {
     val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
     val memberLocal: ParliamentMemberLocal by noteVM.memberLocal.collectAsState()
-    var noteText by remember { mutableStateOf("") }
+    var noteText: String? by remember { mutableStateOf(memberLocal.note) }
 
     LaunchedEffect(navBackStackEntry) { noteVM.getData() }
 
@@ -58,19 +60,18 @@ fun NoteScreen(
         ) {
 
             TextField(
-                value = noteText,
+                value = noteText ?: "",
                 onValueChange = { noteText = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .weight(0.33f),
+                    .height(500.dp),
                 label = { Text("Edit Note") }
             )
 
-            if (noteText != memberLocal.note) {
+            if (noteText != memberLocal.note && !noteText.isNullOrEmpty()) {
                 Button(
                     onClick = {
-                        noteVM.saveNote(memberLocal.hetekaId, noteText)
+                        noteVM.saveNote(memberLocal.hetekaId, noteText!!)
                         navCtrl.navigateUp()
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -79,13 +80,14 @@ fun NoteScreen(
                 }
             }
 
-            if (memberLocal.note != "") {
+            if (!memberLocal.note.isNullOrEmpty()) {
                 Button(
                     onClick = {
                         noteVM.deleteNote(memberLocal.hetekaId)
                         navCtrl.navigateUp()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Text("Delete")
                 }
@@ -111,7 +113,11 @@ class NoteViewModel(
     init { getData() }
 
     fun getData() = viewModelScope.launch {
-        dataRepo.getMemberLocalWithId(hetekaId!!.toInt()).collect { _memberLocal.emit(it) }
+        dataRepo.getMemberLocalWithId(hetekaId!!.toInt()).collect {
+            if (it != null) {
+                _memberLocal.emit(it)
+            }
+        }
         Log.e("DBG", "${_memberLocal.value}")
     }
     fun saveNote(id: Int, note: String) = viewModelScope.launch { dataRepo.updateNoteWithId(id, note) }

@@ -9,7 +9,6 @@ import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.model.ParliamentMemberLocal
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 
 class FetchAndUpdateDBWorker(
@@ -31,15 +30,12 @@ class FetchAndUpdateDBWorker(
             return@withContext handleRetryOrFailure(e)
         }
 
-        Log.d("DBG", "Got PM : $responsePM")
-        Log.d("DBG", "Got PME: $responsePME")
-
         val pmeMap = responsePME.associateBy { it.hetekaId }
 
         responsePair = responsePM.map { member ->
             pmeMap[member.hetekaId]?.let { extra ->
                 Pair(member, extra)
-            } ?: Pair(member, null)
+            } ?: Pair(member, ParliamentMemberExtra(member.hetekaId, null, 0, ""))
         }
 
         responsePair.forEach { data ->
@@ -47,14 +43,16 @@ class FetchAndUpdateDBWorker(
                 dataRepo.addParliamentMember(data.first)
                 if (data.second != null) dataRepo.addParliamentMemberExtra(data.second!!)
 
-                val existingEntry = dataRepo.getEntryById(data.first.hetekaId).firstOrNull()
-                val newEntry = ParliamentMemberLocal(
-                    hetekaId = data.first.hetekaId,
-                    favorite = existingEntry?.favorite ?: false,
-                    note = existingEntry?.note
-                )
-
-                dataRepo.addParliamentLocal(newEntry)
+                var existingEntry: ParliamentMemberLocal? = ParliamentMemberLocal(-1, false, null)
+                dataRepo.getMemberLocalWithId(data.first.hetekaId).collect { existingEntry = it }
+                if (existingEntry?.hetekaId == -1) {
+                    val newEntry = ParliamentMemberLocal(
+                        hetekaId = data.first.hetekaId,
+                        favorite = false,
+                        note = null
+                    )
+                    dataRepo.addParliamentLocal(newEntry)
+                }
             }
             catch (e: Exception) {
                 Log.e("DBG", "Failed to add entries: $data | Error: ${e.message}")

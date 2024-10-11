@@ -23,12 +23,12 @@ class OfflineDataRepository(context: Context): DataRepository {
 
     override fun getMemberWithId(id: Int): Flow<ParliamentMember> = dataDao.getMemberWithId(id)
     override fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra> = dataDao.getMemberExtraWithId(id)
-    override fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal> = dataDao.getMemberLocalWithId(id)
+    override fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal?> = dataDao.getMemberLocalWithId(id)
 
     override fun getParties(): Flow<List<String>> = dataDao.getParties()
     override fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>> = dataDao.getAllPMWithParty(party)
 
-    override fun getEntryById(id: Int): Flow<ParliamentMemberLocal?> = dataDao.getEntryById(id)
+
 
     override suspend fun addParliamentLocal(data: ParliamentMemberLocal) = dataDao.addParliamentLocal(data)
     override fun getAllPMIds(): Flow<List<Int>> = dataDao.getAllPMIds()

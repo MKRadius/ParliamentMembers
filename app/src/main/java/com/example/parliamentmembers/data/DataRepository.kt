@@ -18,12 +18,11 @@ interface DataRepository {
 
     fun getMemberWithId(id: Int): Flow<ParliamentMember>
     fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
-    fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal>
+    fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal?>
 
     fun getParties(): Flow<List<String>>
     fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>>
 
-    fun getEntryById(id: Int): Flow<ParliamentMemberLocal?>
     suspend fun addParliamentLocal(data: ParliamentMemberLocal)
     fun getAllPMIds(): Flow<List<Int>>
 
