@@ -1,6 +1,5 @@
 package com.example.parliamentmembers.data
 
-import androidx.room.Query
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.model.ParliamentMemberLocal
