@@ -76,4 +76,5 @@ dependencies {
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
     ksp(libs.androidx.room.compiler)
+    implementation(libs.coil.compose)
 }

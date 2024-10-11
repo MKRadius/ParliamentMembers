@@ -18,7 +18,7 @@ interface DataDao {
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 
     @Insert(entity = ParliamentMemberLocal::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addEntry(data: ParliamentMemberLocal)
+    suspend fun addParliamentLocal(data: ParliamentMemberLocal)
 
     @Query("SELECT * FROM parliament_member_local WHERE heteka_id = :id LIMIT 1")
     fun getEntryById(id: Int): Flow<ParliamentMemberLocal?>
@@ -52,4 +52,10 @@ interface DataDao {
 
     @Query("UPDATE parliament_member_local SET note = NULL WHERE heteka_id = :id")
     suspend fun deleteNoteWithId(id: Int)
+
+    @Query("SELECT favorite FROM parliament_member_local WHERE heteka_id = :id")
+    fun getFavoriteById(id: Int): Flow<Boolean>
+
+    @Query("UPDATE parliament_member_local SET favorite = NOT favorite WHERE heteka_id = :id")
+    suspend fun toggleFavorite(id: Int)
 }

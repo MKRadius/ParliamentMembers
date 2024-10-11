@@ -30,9 +30,12 @@ class OfflineDataRepository(context: Context): DataRepository {
 
     override fun getEntryById(id: Int): Flow<ParliamentMemberLocal?> = dataDao.getEntryById(id)
 
-    override suspend fun addEntry(data: ParliamentMemberLocal) = dataDao.addEntry(data)
+    override suspend fun addParliamentLocal(data: ParliamentMemberLocal) = dataDao.addParliamentLocal(data)
     override fun getAllPMIds(): Flow<List<Int>> = dataDao.getAllPMIds()
 
     override suspend fun updateNoteWithId(id: Int, note: String?) = dataDao.updateNoteWithId(id, note)
     override suspend fun deleteNoteWithId(id: Int) = dataDao.deleteNoteWithId(id)
+
+    override fun getFavoriteById(id: Int): Flow<Boolean> = dataDao.getFavoriteById(id)
+    override suspend fun toggleFavorite(id: Int) = dataDao.toggleFavorite(id)
 }

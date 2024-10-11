@@ -24,9 +24,12 @@ interface DataRepository {
     fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>>
 
     fun getEntryById(id: Int): Flow<ParliamentMemberLocal?>
-    suspend fun addEntry(data: ParliamentMemberLocal)
+    suspend fun addParliamentLocal(data: ParliamentMemberLocal)
     fun getAllPMIds(): Flow<List<Int>>
 
     suspend fun updateNoteWithId(id: Int, note: String?)
     suspend fun deleteNoteWithId(id: Int)
+
+    fun getFavoriteById(id: Int): Flow<Boolean>
+    suspend fun toggleFavorite(id: Int)
 }

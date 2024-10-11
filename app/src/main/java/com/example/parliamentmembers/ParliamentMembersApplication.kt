@@ -52,7 +52,7 @@ class ParliamentMembersApplication: Application(), Configuration.Provider {
 
         Handler(Looper.getMainLooper()).postDelayed({
             schedulePeriodicFetchAndUpdateWork()
-        }, TimeUnit.MINUTES.toMillis(10))
+        }, TimeUnit.MINUTES.toMillis(1))
     }
 
     override val workManagerConfiguration: Configuration
