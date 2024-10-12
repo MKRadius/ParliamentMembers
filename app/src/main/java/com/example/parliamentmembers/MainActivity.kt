@@ -1,3 +1,14 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * MainActivity is the main activity of the Parliament Members Android application.
+ * It serves as the entry point for the user interface and initializes the application theme
+ * based on the user's preferences. The activity sets the content to the PMApp composable,
+ * which contains the navigation graph for the application.
+ */
+
 package com.example.parliamentmembers
 
 import android.os.Bundle

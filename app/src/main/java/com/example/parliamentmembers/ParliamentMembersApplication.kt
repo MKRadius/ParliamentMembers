@@ -1,3 +1,15 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * ParliamentMembersApplication is the main application class for the Parliament Members Android application.
+ * It initializes the application's dependency container and sets up WorkManager for background tasks.
+ * The application also configures DataStore for managing user preferences regarding theme settings.
+ * It includes methods to schedule one-time and periodic work requests for fetching and updating the database
+ * based on network connectivity and battery status.
+ */
+
 package com.example.parliamentmembers
 
 import android.app.Application

@@ -1,3 +1,19 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * FetchAndUpdateDBWorker is a CoroutineWorker that performs background operations to fetch and update
+ * data related to parliament members in the Parliament Members Android application. It utilizes the
+ * DataRepository to retrieve parliament members and their extra data asynchronously, associating them
+ * based on a unique identifier (hetekaId). The worker processes the fetched data, adding it to the
+ * local database while handling potential errors and retry attempts.
+ *
+ * The doWork method fetches data from the repository, pairs each parliament member with their extra
+ * data, and saves the entries into the local database. In case of an exception, the worker will
+ * retry three additional times before failing.
+ */
+
 package com.example.parliamentmembers.workers
 
 import android.content.Context

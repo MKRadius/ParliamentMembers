@@ -1,3 +1,16 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * DataDatabase is an abstract class that serves as the main database for
+ * the ParliamentMembers application, managing the Room database instance.
+ * It defines the database schema using the ParliamentMember, ParliamentMemberExtra,
+ * and ParliamentMemberLocal entities. The class includes a singleton instance
+ * for accessing the database and provides an abstract method to obtain
+ * the DataDao for performing CRUD operations on the database.
+ */
+
 package com.example.parliamentmembers.database
 
 import android.content.Context

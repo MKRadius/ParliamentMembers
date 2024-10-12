@@ -1,3 +1,17 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * MemberListScreen is a composable function that presents a list of
+ * parliament members in the ParliamentMembers application. It retrieves
+ * data from the MemberListViewModel and displays each member's information
+ * in a card format, including their name and image. The screen supports
+ * navigation to detailed member views and allows users to mark members
+ * as favorites. It utilizes a LazyColumn for efficient scrolling and
+ * displays a top bar for navigation.
+ */
+
 package com.example.parliamentmembers.ui.screens
 
 import TopBar

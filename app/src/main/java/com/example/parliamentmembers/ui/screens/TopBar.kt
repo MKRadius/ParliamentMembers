@@ -1,3 +1,18 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * TopBar is a composable function that represents the top navigation bar
+ * of the ParliamentMembers application. It includes a title, a back
+ * navigation icon (if applicable), and a switch to toggle between light
+ * and dark themes. The function leverages the TopBarViewModel to manage
+ * theme preferences and ensures that the top bar adapts to the current
+ * theme state. The layout is structured using a Row to arrange the
+ * components horizontally, providing an intuitive user interface for
+ * navigation and theme control.
+ */
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

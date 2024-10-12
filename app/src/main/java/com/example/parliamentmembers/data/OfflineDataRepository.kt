@@ -1,3 +1,17 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * OfflineDataRepository is a class responsible for managing offline data
+ * storage and retrieval in the ParliamentMembers application. It utilizes
+ * Room for local database operations and DataStore for managing user
+ * preferences, such as theme settings. The class provides methods to
+ * add, fetch, and update parliament member data, as well as to toggle
+ * theme preferences and handle various data queries related to parliament
+ * members, their attributes, and constituency details.
+ */
+
 package com.example.parliamentmembers.data
 
 import android.content.Context

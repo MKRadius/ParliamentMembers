@@ -1,3 +1,18 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * HomeScreen is a composable function that displays the main interface
+ * for the ParliamentMembers application. It includes a top bar for
+ * navigation and presents two sorting options—Party and Constituency—
+ * allowing users to filter parliament members. The screen utilizes
+ * a LazyVerticalGrid to display items based on the selected type,
+ * enabling navigation to detailed member lists. The HomeViewModel is
+ * used to manage the display list and sorting type, ensuring responsive
+ * updates to the UI.
+ */
+
 package com.example.parliamentmembers.ui.screens
 
 import TopBar

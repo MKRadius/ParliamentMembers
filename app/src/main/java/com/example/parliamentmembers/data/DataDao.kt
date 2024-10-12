@@ -1,3 +1,16 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * DataDao is a Data Access Object (DAO) interface for managing Parliament Member data
+ * in the Room database. It provides methods for inserting, querying, updating, and
+ * deleting records in the parliament_member, parliament_member_extra, and
+ * parliament_member_local tables. Key functionalities include retrieving all members,
+ * filtering by party or constituency, and managing favorite status and notes.
+ * This interface uses Kotlin Coroutines and Flow for asynchronous data operations.
+ */
+
 package com.example.parliamentmembers.data
 
 import androidx.room.Dao

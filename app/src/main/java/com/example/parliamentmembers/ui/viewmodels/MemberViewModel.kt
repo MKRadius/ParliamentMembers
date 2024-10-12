@@ -1,3 +1,24 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * MemberViewModel is responsible for managing the details of a specific
+ * Parliament Member identified by the `hetekaId` parameter. It retrieves
+ * and holds the member's primary data, additional data, and local data
+ * from the data repository, exposing them as StateFlows for the UI
+ * to observe.
+ *
+ * The ViewModel initializes with a placeholder member and member extra
+ * information. The `init` block triggers the `getData()` function, which
+ * sequentially fetches the member's details, extra data, and local information
+ * using coroutines. The `fetchMember()`, `fetchMemberExtra()`, and
+ * `fetchMemberLocal()` private methods retrieve data from the repository
+ * and emit the results to their respective StateFlows. The `changeFavorite()`
+ * function allows for toggling the favorite status of the member and
+ * refreshes the local data accordingly.
+ */
+
 package com.example.parliamentmembers.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
@@ -19,28 +40,28 @@ class MemberViewModel(
     private var hetekaId: String? = savedStateHandle.get<String>("param")
     private val _member = MutableStateFlow<ParliamentMember>(
         ParliamentMember(
-            0,
-            0,
-            "lastname",
-            "firstname",
-            "party",
-            false,
-            ""
+            hetekaId = 0,
+            seatNumber = 0,
+            lastname = "lastname",
+            firstname = "firstname",
+            party = "party",
+            minister = false,
+            pictureUrl = ""
         )
     )
     private val _memberExtra = MutableStateFlow<ParliamentMemberExtra>(
         ParliamentMemberExtra(
-            0,
-            null,
-            0,
-            ""
+            hetekaId = 0,
+            twitter = null,
+            bornYear = 0,
+            constituency = ""
         )
     )
     private val _memberLocal = MutableStateFlow<ParliamentMemberLocal>(
         ParliamentMemberLocal(
-            0,
-            false,
-            null
+            hetekaId = 0,
+            favorite = false,
+            note = null
         )
     )
 

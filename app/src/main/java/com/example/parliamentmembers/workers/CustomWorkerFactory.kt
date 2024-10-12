@@ -1,3 +1,15 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * CustomWorkerFactory is a custom implementation of WorkerFactory for the Parliament Members Android application.
+ * It provides a way to instantiate workers with a specific dependency (DataRepository) that is needed for
+ * executing background tasks. The factory overrides the createWorker method to return an instance of
+ * FetchAndUpdateDBWorker when requested. This allows workers to access shared resources or dependencies
+ * while performing their tasks.
+ */
+
 package com.example.parliamentmembers.workers
 
 import android.content.Context

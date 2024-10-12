@@ -10,16 +10,6 @@
 - **WorkManager Integration**: Background syncing and periodic updates to fetch the latest parliament members' data.
 - **MVVM Architecture**: Well-structured app using the Model-View-ViewModel architecture to ensure separation of concerns and scalability.
 
-## Screenshots
-| ![Screenshot 1](images/screenshot_0.jpg) | ![Screenshot 2](images/screenshot_1.jpg) | ![Screenshot 3](images/screenshot_2.jpg) |
-|:------------------------------------:|:------------------------------------:|:------------------------------------:|
-| Home screen | Dark mode| Member list |
-
-| ![Screenshot 4](images/screenshot_3.jpg) | ![Screenshot 5](images/screenshot_4.jpg) |
-|:------------------------------------:|:------------------------------------:|
-| Member details screen | Note editing screen |
-
-
 ## Tech Stack
 
 - **Programming Language**: Kotlin
@@ -30,6 +20,15 @@
 - **Background Work**: WorkManager
 - **Architecture**: MVVM (Model-View-ViewModel) with Repository pattern
 - **Coroutines & Flow**: For managing background tasks and asynchronous operations
+
+## Screenshots
+| ![Screenshot 1](images/screenshot_0.jpg) | ![Screenshot 2](images/screenshot_1.jpg) | ![Screenshot 3](images/screenshot_2.jpg) |
+|:------------------------------------:|:------------------------------------:|:------------------------------------:|
+| Home screen | Dark mode| Member list |
+
+| ![Screenshot 4](images/screenshot_3.jpg) | ![Screenshot 5](images/screenshot_4.jpg) |
+|:------------------------------------:|:------------------------------------:|
+| Member details screen | Note editing screen |
   
 ## Installation
 
@@ -68,6 +67,12 @@ The app follows MVVM (Model-View-ViewModel) architecture:
 2. **Offline Access**: Room stores the fetched data locally so users can view it offline.
 3. **Theme Persistence**: DataStore is used to store user preferences, like theme choice.
 
+## Future Improvements
+
+- **Search Functionality**: Add a search bar to filter parliament members by name or party.
+- **Unit Tests**: Write unit tests for ViewModels and Repositories to ensure correctness.
+- **Error Handling**: Implement better error handling and UI feedback for network failures.
+- **Animations**: Add animations to make the UI more engaging and interactive.
 
 ---
 

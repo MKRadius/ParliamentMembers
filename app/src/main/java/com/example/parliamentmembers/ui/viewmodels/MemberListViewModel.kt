@@ -1,3 +1,23 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * MemberListViewModel is responsible for managing the list of Parliament Members
+ * (PM) based on a selected type, which can be either "party" or "constituency".
+ * This ViewModel fetches data from the data repository and tracks the favorite
+ * status of each member.
+ *
+ * The ViewModel maintains two properties, `type` and `selectedType`, retrieved
+ * from the saved state handle, along with a MutableStateFlow `_pmList` that
+ * holds a list of pairs, where each pair consists of a ParliamentMember and a
+ * Boolean indicating whether the member is marked as a favorite. The init block
+ * triggers the initial loading of the member list by calling `getPMList()`,
+ * which fetches members based on the type and selected type, emitting the list
+ * to `_pmList`. The `changeFavorite()` function allows toggling the favorite
+ * status of a member by their ID and refreshes the member list accordingly.
+ */
+
 package com.example.parliamentmembers.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle

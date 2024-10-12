@@ -1,3 +1,14 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * ParliamentMembersNavHost sets up the navigation graph for the Parliament Members application.
+ * It uses the NavHostController to manage navigation between different composable screens,
+ * including HomeScreen, MemberListScreen, MemberScreen, and NoteScreen.
+ * Each screen is mapped to a corresponding route defined in the EnumScreens class.
+ */
+
 package com.example.parliamentmembers.ui.navigation
 
 import androidx.compose.runtime.Composable

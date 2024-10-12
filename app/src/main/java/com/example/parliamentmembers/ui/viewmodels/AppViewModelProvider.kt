@@ -1,3 +1,13 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * This file contains utility functions and objects for the Parliament Members
+ * application. It provides a way to access the ParliamentMembersApplication
+ * instance and a factory for creating view models with necessary dependencies.
+ */
+
 package com.example.parliamentmembers.ui.viewmodels
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY

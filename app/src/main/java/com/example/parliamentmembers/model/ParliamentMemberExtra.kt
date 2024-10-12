@@ -1,3 +1,19 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * ParliamentMemberExtra is a data class representing additional information
+ * related to a member of the parliament. It defines the structure of the
+ * parliament_member_extra table in the Room database, containing fields for
+ * the member's unique identifier (hetekaId), their Twitter handle, year of birth,
+ * and constituency.
+ *
+ * This class is linked to the ParliamentMember class through a
+ * foreign key relationship, ensuring referential integrity between the two tables.
+ * Updates and deletions in the parent table will cascade to this table.
+ */
+
 package com.example.parliamentmembers.model
 
 import androidx.room.ColumnInfo

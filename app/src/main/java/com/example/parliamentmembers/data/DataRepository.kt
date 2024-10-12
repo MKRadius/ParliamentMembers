@@ -1,3 +1,16 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * DataRepository interface defines the contract for data operations related
+ * to Parliament Members, including theme management, CRUD operations for
+ * members and their extra details, and querying functionalities for parties
+ * and constituencies. It uses Kotlin Coroutines and Flow for asynchronous
+ * data handling and provides methods for fetching, adding, updating, and
+ * deleting records.
+ */
+
 package com.example.parliamentmembers.data
 
 import com.example.parliamentmembers.model.ParliamentMember

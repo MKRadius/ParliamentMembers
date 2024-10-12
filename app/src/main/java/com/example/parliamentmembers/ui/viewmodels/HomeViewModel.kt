@@ -1,3 +1,20 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * HomeViewModel is responsible for managing the UI-related data for the home screen
+ * of the Parliament Members Android application. It provides a way to fetch and
+ * display a list of parties or constituencies based on the selected type.
+ *
+ * The ViewModel maintains two state flows: _displayList, which holds the current
+ * list of strings to be displayed, and _type, which represents the current sorting
+ * type (either "party" or "constituency"). The init block triggers the initial
+ * fetch of data by calling getList(), which retrieves data from the data repository
+ * according to the current type. The setSortType() function allows updating the type
+ * and subsequently fetches the relevant data again.
+ */
+
 package com.example.parliamentmembers.ui.viewmodels
 
 import androidx.lifecycle.ViewModel

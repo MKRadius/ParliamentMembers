@@ -1,3 +1,17 @@
+/*
+ * Date: 12th October 2024
+ * Author: Khai Cao
+ * Student ID: 2216586
+ *
+ * MemberScreen is a composable function that displays detailed information
+ * about a selected parliament member in the ParliamentMembers application.
+ * It retrieves data from the MemberViewModel and presents the member's image,
+ * name, position, and other relevant details. The screen includes features
+ * for marking a member as a favorite, adding notes, and linking to their
+ * Twitter profile. The layout utilizes a vertical scroll for better
+ * user experience and employs a top bar for navigation.
+ */
+
 package com.example.parliamentmembers.ui.screens
 
 import TopBar
