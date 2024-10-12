@@ -1,6 +1,7 @@
 package com.example.parliamentmembers.ui.screens
 
 import TopBar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -54,6 +56,7 @@ fun NoteScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.surfaceBright)
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween
@@ -71,12 +74,16 @@ fun NoteScreen(
             if (noteText != memberLocal.note && !noteText.isNullOrEmpty()) {
                 Button(
                     onClick = {
-                        noteVM.saveNote(memberLocal.hetekaId, noteText!!)
+                        noteVM.saveNote(memberLocal.hetekaId, noteText)
                         navCtrl.navigateUp()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    Text("Save")
+                    Text(
+                        text = "Save",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
             }
 
@@ -87,9 +94,12 @@ fun NoteScreen(
                         navCtrl.navigateUp()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(Color.Red)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Delete")
+                    Text(
+                        text = "Delete",
+                        color = MaterialTheme.colorScheme.onError
+                    )
                 }
             }
         }

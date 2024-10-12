@@ -64,39 +64,43 @@ fun MemberListScreen(
     memListVM: MemberListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val imgBaseUrl = "https://avoindata.eduskunta.fi/"
-    val context = LocalContext.current
     val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
-    val name = backStackEntry.arguments?.getString("name") ?: "Members"
+    val selectedType = backStackEntry.arguments?.getString("selected") ?: "Members"
     val pmList: List<Pair<ParliamentMember, Boolean>> by memListVM.pmList.collectAsState()
 
     LaunchedEffect(navBackStackEntry) { memListVM.getPMList() }
 
     Scaffold(
-        topBar = { TopBar(name.uppercase(), true, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = { TopBar(selectedType.uppercase(), true, onNavigateUp = { navCtrl.navigateUp() }) }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).fillMaxSize()
+            modifier = Modifier
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .fillMaxSize()
         ) {
             items(pmList) {
                 Card(
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(10.dp)
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParams(it.first.hetekaId.toString())) }
+                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParams(it.first.hetekaId.toString())) },
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    ),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
                         Box(
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                            modifier = Modifier.clip(RoundedCornerShape(8.dp)).width(46.dp)
                         ) {
                             Image(
                                 painter = rememberAsyncImagePainter(
-                                    ImageRequest.Builder(context)
+                                    ImageRequest.Builder(LocalContext.current)
                                         .data(data = "${imgBaseUrl}${it.first.pictureUrl}")
                                         .apply(
                                             block = fun ImageRequest.Builder.() {
@@ -117,11 +121,13 @@ fun MemberListScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = "${it.first.firstname} ${it.first.lastname}",
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
                                 style = MaterialTheme.typography.titleLarge
                             )
                             if (it.first.minister) {
                                 Text(
                                     text = "Minister",
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }
@@ -139,7 +145,7 @@ fun MemberListScreen(
                             false -> Icon(
                                 imageVector = Icons.Filled.FavoriteBorder,
                                 contentDescription = "Favorite icon",
-                                tint = Color.Black,
+                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
                                 modifier = Modifier.size(24.dp).clickable {
                                     memListVM.changeFavorite(it.first.hetekaId)
                                 }

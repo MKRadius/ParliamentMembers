@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +51,11 @@ fun HomeScreen(
     Scaffold(
         topBar = { TopBar("", false, onNavigateUp = { navCtrl.navigateUp() }) }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(
+            modifier = Modifier.padding(paddingValues)
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .fillMaxSize()
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
@@ -58,16 +64,15 @@ fun HomeScreen(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                        .background(if (type == "party") Color.LightGray else Color.Transparent, RoundedCornerShape(16.dp))
+                        .padding(10.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(if (type == "party") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
                         .clickable { homeVM.setSortType("party") }
                         .padding(8.dp)
                 ) {
                     Text(
                         text = "Party",
-                        color = Color.Black,
+                        color = if (type == "party") MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -77,16 +82,15 @@ fun HomeScreen(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                        .background(if (type == "constituency") Color.LightGray else Color.Transparent, RoundedCornerShape(16.dp))
+                        .padding(10.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(if (type == "constituency") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
                         .clickable { homeVM.setSortType("constituency") }
                         .padding(8.dp)
                 ) {
                     Text(
                         text = "Constituency",
-                        color = Color.Black,
+                        color = if (type == "constituency") MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -101,9 +105,9 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(8.dp)
                             .size(120.dp)
-                            .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
-                            .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(16.dp))
                             .clickable { navCtrl.navigate(EnumScreens.MEMBERLIST.withParams(type, it.toString())) }
+                            .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp))
                     ) {
                         Text(
                             text = when (type) {
@@ -111,6 +115,7 @@ fun HomeScreen(
                                 "constituency" -> it.replaceFirstChar { char -> char.uppercase() }.replace("-", "-\n")
                                 else -> it
                             },
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
                             modifier = Modifier.align(Alignment.Center).padding(8.dp)
                         )
                     }

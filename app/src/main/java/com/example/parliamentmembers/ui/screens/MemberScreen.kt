@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -88,6 +89,9 @@ fun MemberScreen(
             .build()
     )
 
+    val boxColor = MaterialTheme.colorScheme.tertiaryContainer
+    val onBoxColor = MaterialTheme.colorScheme.onTertiaryContainer
+
     LaunchedEffect(navBackStackEntry) { memberVM.getData() }
 
     Scaffold(
@@ -102,7 +106,8 @@ fun MemberScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .fillMaxSize()
                 .padding(8.dp)
                 .verticalScroll(scrollState)
         ) {
@@ -165,7 +170,8 @@ fun MemberScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                 ) {
                     Column(
@@ -174,13 +180,13 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Heteka ID ",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "${member.hetekaId}",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 14.sp
                         )
                     }
@@ -190,7 +196,8 @@ fun MemberScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                 ) {
                     Column(
@@ -199,13 +206,13 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Seat",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "${member.seatNumber}",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 14.sp
                         )
                     }
@@ -215,7 +222,8 @@ fun MemberScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                 ) {
                     Column(
@@ -224,13 +232,13 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Party",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "${member.party.uppercase()}",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 14.sp
                         )
                     }
@@ -245,7 +253,8 @@ fun MemberScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                 ) {
                     Column(
@@ -254,13 +263,13 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Born Year",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${memberExtra.bornYear}",
-                            color = Color.Black,
+                            text = if (memberExtra.bornYear == 0) "No data" else "${memberExtra.bornYear}",
+                            color = onBoxColor,
                             fontSize = 14.sp
                         )
                     }
@@ -270,7 +279,8 @@ fun MemberScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                 ) {
                     Column(
@@ -279,13 +289,13 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Constituency",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${memberExtra.constituency}",
-                            color = Color.Black,
+                            text = if (memberExtra.constituency == "") "No data" else "${memberExtra.constituency}",
+                            color = onBoxColor,
                             fontSize = 14.sp
                         )
                     }
@@ -296,7 +306,8 @@ fun MemberScreen(
                 Box(
                     modifier = Modifier
                         .padding(4.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(boxColor)
                         .padding(8.dp)
                         .fillMaxWidth()
                 ) {
@@ -307,7 +318,7 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Twitter",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -336,7 +347,8 @@ fun MemberScreen(
             Box(
                 modifier = Modifier
                     .padding(4.dp)
-                    .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(boxColor)
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
@@ -347,7 +359,7 @@ fun MemberScreen(
                 ) {
                     Text(
                         text = "Mark as favorite",
-                        color = Color.Black,
+                        color = onBoxColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -363,7 +375,7 @@ fun MemberScreen(
                         false -> Icon(
                             imageVector = Icons.Filled.FavoriteBorder,
                             contentDescription = "Favorite icon",
-                            tint = Color.Black,
+                            tint = onBoxColor,
                             modifier = Modifier.size(24.dp).clickable {
                                 memberVM.changeFavorite(memberLocal.hetekaId)
                             }
@@ -375,7 +387,8 @@ fun MemberScreen(
             Box(
                 modifier = Modifier
                     .padding(4.dp)
-                    .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(boxColor)
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
@@ -387,7 +400,7 @@ fun MemberScreen(
                     ) {
                         Text(
                             text = "Note",
-                            color = Color.Black,
+                            color = onBoxColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -401,7 +414,7 @@ fun MemberScreen(
                             Icon(
                                 imageVector = if (memberLocal.note.isNullOrEmpty()) { Icons.Filled.Add } else { Icons.Filled.Edit },
                                 contentDescription = "Add icon",
-                                tint = Color.Black,
+                                tint = onBoxColor,
                             )
                         }
                     }

@@ -19,12 +19,12 @@ class HomeViewModel(
 
     init { getList() }
 
-    fun getList() = viewModelScope.launch {
+    private fun getList() = viewModelScope.launch {
         when (_type.value) {
             "party" -> dataRepo.getParties().collect { _displayList.emit(it) }
             "constituency" -> {
                 dataRepo.getConstituencies().collect { constituencies ->
-                    val filteredList = constituencies.map { if (it.isBlank()) "Others" else it }
+                    val filteredList = constituencies.map { if (it.isEmpty()) "Others" else it }
                     _displayList.emit(filteredList)
                 }
             }

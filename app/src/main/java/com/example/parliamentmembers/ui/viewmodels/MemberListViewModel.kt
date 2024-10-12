@@ -15,7 +15,7 @@ class MemberListViewModel(
     private val dataRepo: DataRepository,
 ): ViewModel() {
     private var type: String? = savedStateHandle.get<String>("type")
-    private var name: String? = savedStateHandle.get<String>("name")
+    private var selectedType: String? = savedStateHandle.get<String>("selected")
     private val _pmList = MutableStateFlow<List<Pair<ParliamentMember, Boolean>>>(listOf())
     val pmList: StateFlow<List<Pair<ParliamentMember, Boolean>>> = _pmList
 
@@ -24,7 +24,7 @@ class MemberListViewModel(
     fun getPMList() {
         when (type) {
             "party" -> viewModelScope.launch {
-                dataRepo.getAllPMWithParty(name!!).collect { pmList ->
+                dataRepo.getAllPMWithParty(selectedType!!).collect { pmList ->
                     val pmWithFavorites = pmList.map { member ->
                         val isFavorite =
                             dataRepo.getFavoriteById(member.hetekaId).firstOrNull() ?: false
@@ -35,8 +35,8 @@ class MemberListViewModel(
             }
 
             "constituency" -> viewModelScope.launch {
-                if (name == "Others") name = ""
-                dataRepo.getAllPMWithConstituency(name!!).collect { pmList ->
+                if (selectedType == "Others") selectedType = ""
+                dataRepo.getAllPMWithConstituency(selectedType!!).collect { pmList ->
                     val pmWithFavorites = pmList.map { member ->
                         val isFavorite =
                             dataRepo.getFavoriteById(member.hetekaId).firstOrNull() ?: false

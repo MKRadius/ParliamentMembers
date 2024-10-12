@@ -2,7 +2,7 @@ package com.example.parliamentmembers.ui.screens
 
 enum class EnumScreens(val route: String) {
     HOME("home"),
-    MEMBERLIST("memberlist/{type}/{name}"),
+    MEMBERLIST("memberlist/{type}/{selected}"),
     MEMBER("member/{param}"),
     NOTE("note/{param}");
 

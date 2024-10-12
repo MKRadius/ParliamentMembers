@@ -24,18 +24,21 @@ fun TopBar(
     canNavigateBack: Boolean,
     onNavigateUp: () -> Unit,
 ) {
+    val lineColor = MaterialTheme.colorScheme.onSurface
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
             .drawBehind {
                 drawLine(
-                    color = Color.Black,
+                    color = lineColor,
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
-                    strokeWidth = 2.dp.toPx()
+                    strokeWidth = 4.dp.toPx()
                 )
             }
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -53,7 +56,7 @@ fun TopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back Icon",
-                        tint = Color.Black,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }
@@ -64,6 +67,7 @@ fun TopBar(
             ) {
                 Text(
                     text = title,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
