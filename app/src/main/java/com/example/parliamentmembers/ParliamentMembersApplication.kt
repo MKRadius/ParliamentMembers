@@ -1,7 +1,11 @@
 package com.example.parliamentmembers
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -15,12 +19,17 @@ import com.example.parliamentmembers.workers.CustomWorkerFactory
 import com.example.parliamentmembers.workers.FetchAndUpdateDBWorker
 import java.util.concurrent.TimeUnit
 
+private const val DARK_THEME_PREFERENCE_NAME = "dark_theme_preferences"
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = DARK_THEME_PREFERENCE_NAME
+)
+
 class ParliamentMembersApplication: Application(), Configuration.Provider {
    lateinit var container: AppContainer
 
     override fun onCreate() {
         super.onCreate()
-        container = AppDataContainer(this)
+        container = AppDataContainer(this, dataStore)
         WorkManager.initialize(this, workManagerConfiguration)
         updateDataOnCreate()
         schedulePeriodicFetchAndUpdateWork()

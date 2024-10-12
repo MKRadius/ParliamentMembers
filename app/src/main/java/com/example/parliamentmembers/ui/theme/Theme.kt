@@ -258,7 +258,7 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun ParliamentMembersTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable() () -> Unit

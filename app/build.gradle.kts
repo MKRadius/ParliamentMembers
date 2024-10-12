@@ -77,4 +77,5 @@ dependencies {
     implementation(libs.converter.gson)
     ksp(libs.androidx.room.compiler)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.datastore.preferences)
 }

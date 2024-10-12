@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class MemberViewModel(
     savedStateHandle: SavedStateHandle,
     private val dataRepo: DataRepository,
-): ViewModel() {
+) : ViewModel() {
     private var hetekaId: String? = savedStateHandle.get<String>("param")
     private val _member = MutableStateFlow<ParliamentMember>(
         ParliamentMember(

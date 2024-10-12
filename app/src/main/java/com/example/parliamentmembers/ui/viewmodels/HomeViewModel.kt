@@ -9,8 +9,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val dataRepo: DataRepository,
-): ViewModel() {
-
+) : ViewModel() {
     private val _displayList = MutableStateFlow<List<String>>(listOf(""))
     private val _type = MutableStateFlow<String>("party")
 

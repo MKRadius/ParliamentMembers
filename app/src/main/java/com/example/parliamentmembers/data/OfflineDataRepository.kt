@@ -1,14 +1,53 @@
 package com.example.parliamentmembers.data
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.IOException
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import com.example.parliamentmembers.database.DataDatabase
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.model.ParliamentMemberExtra
 import com.example.parliamentmembers.model.ParliamentMemberLocal
 import com.example.parliamentmembers.network.RetrofitInstance
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
-class OfflineDataRepository(context: Context): DataRepository {
+class OfflineDataRepository(
+    context: Context,
+    private val dataStore: DataStore<Preferences>
+): DataRepository {
+    private companion object {
+        val IS_DARK_THEME = booleanPreferencesKey("is_dark_theme")
+    }
+
+    override val isDarkThemeFlow: Flow<Boolean> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e("DBG", "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[IS_DARK_THEME] ?: true
+        }
+
+    override suspend fun toggleTheme() {
+        dataStore.edit { preferences ->
+            val currentTheme = preferences[IS_DARK_THEME] ?: true
+            preferences[IS_DARK_THEME] = !currentTheme
+            Log.d("DBG", "pref ${preferences[IS_DARK_THEME]}")
+        }
+    }
+
     private val retrofitApi = RetrofitInstance.api
     private val dataDao = DataDatabase.getDatabase(context).dataDao()
 

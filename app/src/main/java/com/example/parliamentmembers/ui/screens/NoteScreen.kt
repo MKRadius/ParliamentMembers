@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.datastore.dataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,12 +52,18 @@ fun NoteScreen(
     LaunchedEffect(memberLocal) { noteText = memberLocal.note ?: ""}
 
     Scaffold(
-        topBar = { TopBar("Note", true, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = {
+            TopBar(
+                title = "Note",
+                canNavigateBack = true,
+                onNavigateUp = { navCtrl.navigateUp() }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surfaceBright)
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween

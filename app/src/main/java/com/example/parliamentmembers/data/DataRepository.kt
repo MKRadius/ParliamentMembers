@@ -6,6 +6,10 @@ import com.example.parliamentmembers.model.ParliamentMemberLocal
 import kotlinx.coroutines.flow.Flow
 
 interface DataRepository {
+    val isDarkThemeFlow: Flow<Boolean>
+
+    suspend fun toggleTheme()
+
     suspend fun addParliamentMember(data: ParliamentMember)
     suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
 

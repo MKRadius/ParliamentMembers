@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class MemberListViewModel(
     savedStateHandle: SavedStateHandle,
     private val dataRepo: DataRepository,
-): ViewModel() {
+) : ViewModel() {
     private var type: String? = savedStateHandle.get<String>("type")
     private var selectedType: String? = savedStateHandle.get<String>("selected")
     private val _pmList = MutableStateFlow<List<Pair<ParliamentMember, Boolean>>>(listOf())
@@ -38,8 +38,7 @@ class MemberListViewModel(
                 if (selectedType == "Others") selectedType = ""
                 dataRepo.getAllPMWithConstituency(selectedType!!).collect { pmList ->
                     val pmWithFavorites = pmList.map { member ->
-                        val isFavorite =
-                            dataRepo.getFavoriteById(member.hetekaId).firstOrNull() ?: false
+                        val isFavorite = dataRepo.getFavoriteById(member.hetekaId).firstOrNull() ?: false
                         Pair(member, isFavorite)
                     }
                     _pmList.emit(pmWithFavorites)

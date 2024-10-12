@@ -49,11 +49,17 @@ fun HomeScreen(
     val type: String by homeVM.type.collectAsState()
 
     Scaffold(
-        topBar = { TopBar("", false, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = {
+            TopBar(
+                title = "",
+                canNavigateBack = false,
+                onNavigateUp = { navCtrl.navigateUp() }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surfaceBright)
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
             Row(
@@ -66,13 +72,22 @@ fun HomeScreen(
                         .weight(1f)
                         .padding(10.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .background(if (type == "party") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
+                        .background(
+                            if (type == "party")
+                                MaterialTheme.colorScheme.tertiary
+                            else
+                                MaterialTheme.colorScheme.secondaryContainer,
+                            RoundedCornerShape(20.dp)
+                        )
                         .clickable { homeVM.setSortType("party") }
                         .padding(8.dp)
                 ) {
                     Text(
                         text = "Party",
-                        color = if (type == "party") MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = if (type == "party")
+                                MaterialTheme.colorScheme.onTertiary
+                            else
+                                MaterialTheme.colorScheme.onSecondaryContainer,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -84,13 +99,22 @@ fun HomeScreen(
                         .weight(1f)
                         .padding(10.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .background(if (type == "constituency") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
+                        .background(
+                            if (type == "constituency")
+                                MaterialTheme.colorScheme.tertiary
+                            else
+                                MaterialTheme.colorScheme.secondaryContainer,
+                            RoundedCornerShape(20.dp)
+                        )
                         .clickable { homeVM.setSortType("constituency") }
                         .padding(8.dp)
                 ) {
                     Text(
                         text = "Constituency",
-                        color = if (type == "constituency") MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = if (type == "constituency")
+                                MaterialTheme.colorScheme.onTertiary
+                            else
+                                MaterialTheme.colorScheme.onSecondaryContainer,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

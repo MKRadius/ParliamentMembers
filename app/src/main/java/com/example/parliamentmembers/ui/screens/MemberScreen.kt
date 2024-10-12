@@ -64,7 +64,6 @@ import kotlinx.coroutines.launch
 import coil.request.ImageRequest
 import com.example.parliamentmembers.ui.viewmodels.MemberViewModel
 
-
 @Composable
 fun MemberScreen(
     navCtrl: NavController,
@@ -106,7 +105,7 @@ fun MemberScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surfaceBright)
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .padding(8.dp)
                 .verticalScroll(scrollState)

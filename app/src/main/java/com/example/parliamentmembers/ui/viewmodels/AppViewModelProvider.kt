@@ -38,5 +38,11 @@ object AppViewModelProvider {
                 pmApplication().container.dataRepo
             )
         }
+
+        initializer {
+            TopBarViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
     }
 }

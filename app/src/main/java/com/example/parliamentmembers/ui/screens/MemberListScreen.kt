@@ -3,7 +3,6 @@ package com.example.parliamentmembers.ui.screens
 import TopBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,9 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -48,14 +44,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.parliamentmembers.R
-import com.example.parliamentmembers.data.DataRepository
 import com.example.parliamentmembers.model.ParliamentMember
 import com.example.parliamentmembers.ui.viewmodels.AppViewModelProvider
 import com.example.parliamentmembers.ui.viewmodels.MemberListViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.launch
 
 @Composable
 fun MemberListScreen(
@@ -71,12 +62,18 @@ fun MemberListScreen(
     LaunchedEffect(navBackStackEntry) { memListVM.getPMList() }
 
     Scaffold(
-        topBar = { TopBar(selectedType.uppercase(), true, onNavigateUp = { navCtrl.navigateUp() }) }
+        topBar = {
+            TopBar(
+                title = selectedType.uppercase(),
+                canNavigateBack = true,
+                onNavigateUp = { navCtrl.navigateUp() }
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surfaceBright)
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
             items(pmList) {
