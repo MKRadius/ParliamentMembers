@@ -3,20 +3,10 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * MemberViewModel is responsible for managing the details of a specific
- * Parliament Member identified by the `hetekaId` parameter. It retrieves
- * and holds the member's primary data, additional data, and local data
- * from the data repository, exposing them as StateFlows for the UI
- * to observe.
- *
- * The ViewModel initializes with a placeholder member and member extra
- * information. The `init` block triggers the `getData()` function, which
- * sequentially fetches the member's details, extra data, and local information
- * using coroutines. The `fetchMember()`, `fetchMemberExtra()`, and
- * `fetchMemberLocal()` private methods retrieve data from the repository
- * and emit the results to their respective StateFlows. The `changeFavorite()`
- * function allows for toggling the favorite status of the member and
- * refreshes the local data accordingly.
+ * MemberViewModel is responsible for managing the state of a parliament member's details,
+ * including fetching and holding member data, additional information, local state (favorite status and notes),
+ * and the image state. The ViewModel retrieves data from the repository when initialized
+ * and provides state flows for the UI to observe changes in member details.
  */
 
 package com.example.parliamentmembers.ui.viewmodels
@@ -64,10 +54,12 @@ class MemberViewModel(
             note = null
         )
     )
+    private val _isImageOnLocalStates = MutableStateFlow<Boolean>(false)
 
     val member: StateFlow<ParliamentMember> = _member
     val memberExtra: StateFlow<ParliamentMemberExtra> = _memberExtra
     val memberLocal: StateFlow<ParliamentMemberLocal> = _memberLocal
+    val isImageOnLocalStates: StateFlow<Boolean> = _isImageOnLocalStates
 
     init { getData() }
 
@@ -98,4 +90,6 @@ class MemberViewModel(
         dataRepo.toggleFavorite(id)
         fetchMemberLocal()
     }
+
+    fun updateImageState(bool: Boolean) { _isImageOnLocalStates.value = bool }
 }

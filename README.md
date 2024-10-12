@@ -6,6 +6,7 @@
 
 - **Jetpack Compose UI**: A fully modern UI built using Jetpack Compose, providing smooth and dynamic layouts.
 - **Offline Storage**: Uses Room Database to store parliament members' data for offline access.
+- **Image Caching**: Images are stored locally to reduce network transmission.
 - **Theme Switching**: Users can toggle between Light and Dark themes with persistent preferences managed via DataStore.
 - **WorkManager Integration**: Background syncing and periodic updates to fetch the latest parliament members' data.
 - **MVVM Architecture**: Well-structured app using the Model-View-ViewModel architecture to ensure separation of concerns and scalability.

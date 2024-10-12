@@ -3,17 +3,11 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * TopBarViewModel manages the theme state for the application, specifically
- * handling the dark theme preference. It uses a StateFlow to provide a
- * reactive way to observe the current theme state.
- *
- * The ViewModel initializes with a default theme state of light mode
- * (false). In the `init` block, it collects the dark theme preference
- * from the DataRepository and updates the `_isDarkTheme` StateFlow
- * accordingly, allowing the UI to react to changes in theme state.
- * The `toggleTheme()` function provides the ability to switch between
- * dark and light themes by invoking the corresponding method in the
- * DataRepository.
+ * TopBarViewModel is responsible for managing the theme state of the TopBar
+ * in the Parliament Members app. It retrieves the current theme state from the
+ * data repository and provides a StateFlow to observe changes in the
+ * dark theme setting. The ViewModel also includes a method to toggle
+ * the theme, updating the repository accordingly.
  */
 
 package com.example.parliamentmembers.ui.viewmodels

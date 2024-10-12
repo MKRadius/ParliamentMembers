@@ -3,18 +3,12 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * NoteViewModel manages the note-taking functionality for a specific
- * Parliament Member identified by the `hetekaId` parameter. It
- * retrieves and maintains the local data for the member, including
- * any associated notes and favorite status.
- *
- * The ViewModel initializes with a placeholder for the local member data.
- * In the `init` block, the `getData()` function is called to fetch
- * the local information for the specified member using the `hetekaId`.
- * This information is emitted as a StateFlow, allowing the UI to observe
- * changes. The `saveNote()` method allows users to update the note for
- * the member, while the `deleteNote()` method provides functionality
- * to remove the note from the database.
+ * NoteViewModel is responsible for managing notes associated with a Parliament member
+ * in the Parliament Members app. It retrieves, saves, and deletes notes from the local
+ * data repository using the member's ID. The ViewModel provides a StateFlow to
+ * observe the member's local data, including notes and favorite status, and
+ * handles the data fetching asynchronously upon initialization and when notes are
+ * updated or deleted.
  */
 
 package com.example.parliamentmembers.ui.viewmodels

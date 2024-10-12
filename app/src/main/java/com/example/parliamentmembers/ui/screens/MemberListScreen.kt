@@ -3,19 +3,16 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * MemberListScreen is a composable function that presents a list of
- * parliament members in the ParliamentMembers application. It retrieves
- * data from the MemberListViewModel and displays each member's information
- * in a card format, including their name and image. The screen supports
- * navigation to detailed member views and allows users to mark members
- * as favorites. It utilizes a LazyColumn for efficient scrolling and
- * displays a top bar for navigation.
+ * MemberListScreen is a composable function that displays a list of parliament members.
+ * It utilizes a ViewModel to fetch and manage the state of the member list.
+ * Each item in the list features the member's name, ministerial status,
+ * an image loaded from a remote source, and a favorite icon
+ * that indicates whether the member is marked as a favorite.
  */
 
 package com.example.parliamentmembers.ui.screens
 
 import TopBar
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,17 +45,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import com.example.parliamentmembers.R
 import com.example.parliamentmembers.model.ParliamentMember
+import com.example.parliamentmembers.ui.components.CustomImageDisplay
 import com.example.parliamentmembers.ui.viewmodels.AppViewModelProvider
 import com.example.parliamentmembers.ui.viewmodels.MemberListViewModel
 
@@ -69,11 +63,19 @@ fun MemberListScreen(
     memListVM: MemberListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val imgBaseUrl = "https://avoindata.eduskunta.fi/"
+
     val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
     val selectedType = backStackEntry.arguments?.getString("selected") ?: "Members"
-    val pmList: List<Pair<ParliamentMember, Boolean>> by memListVM.pmList.collectAsState()
 
-    LaunchedEffect(navBackStackEntry) { memListVM.getPMList() }
+    val pmList: List<Pair<ParliamentMember, Boolean>> by memListVM.pmList.collectAsState()
+    val isImageOnLocalStates by memListVM.isImageOnLocalStates.collectAsState()
+
+    LaunchedEffect(navBackStackEntry) {
+        memListVM.getPMList()
+        if (isImageOnLocalStates?.isEmpty() == true) {
+            memListVM.updateImageState(0, false)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -84,83 +86,91 @@ fun MemberListScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxSize()
-        ) {
-            items(pmList) {
-                Card(
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParams(it.first.hetekaId.toString())) },
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    ),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        if (pmList.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No members available.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+        else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .fillMaxSize()
+            ) {
+                items(pmList) {
+                    Card(
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .clickable { navCtrl.navigate(EnumScreens.MEMBER.withParams(it.first.hetekaId.toString())) },
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        ),
                     ) {
-                        Box(
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp)).width(46.dp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp)
                         ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(
-                                    ImageRequest.Builder(LocalContext.current)
-                                        .data(data = "${imgBaseUrl}${it.first.pictureUrl}")
-                                        .apply(
-                                            block = fun ImageRequest.Builder.() {
-                                                placeholder(R.drawable.ic_launcher_foreground)
-                                                error(R.drawable.ic_launcher_foreground)
-                                            }
-                                        )
-                                        .build()
-                                ),
-                                contentDescription = null,
-                                alignment = Alignment.TopCenter,
-                                contentScale = ContentScale.FillHeight
-                            )
-                        }
-
-                        Spacer(Modifier.width(16.dp))
-
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "${it.first.firstname} ${it.first.lastname}",
-                                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            if (it.first.minister) {
-                                Text(
-                                    text = "Minister",
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    style = MaterialTheme.typography.bodyMedium
+                            Box(
+                                modifier = Modifier.clip(RoundedCornerShape(8.dp)).width(46.dp)
+                            ) {
+                                CustomImageDisplay(
+                                    context = LocalContext.current,
+                                    imageUrl = "$imgBaseUrl${it.first.pictureUrl}",
+                                    onImageLoaded = { newImageOnLocalBool ->
+                                        memListVM.updateImageState(pmList.indexOf(it), newImageOnLocalBool)
+                                    }
                                 )
                             }
-                        }
 
-                        when (it.second) {
-                            true -> Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = "Favorite icon",
-                                tint = Color.Red,
-                                modifier = Modifier.size(24.dp).clickable {
-                                    memListVM.changeFavorite(it.first.hetekaId)
+                            Spacer(Modifier.width(16.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "${it.first.firstname} ${it.first.lastname}",
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                                if (it.first.minister) {
+                                    Text(
+                                        text = "Minister",
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
                                 }
-                            )
-                            false -> Icon(
-                                imageVector = Icons.Filled.FavoriteBorder,
-                                contentDescription = "Favorite icon",
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                                modifier = Modifier.size(24.dp).clickable {
-                                    memListVM.changeFavorite(it.first.hetekaId)
-                                }
-                            )
+                            }
+
+                            when (it.second) {
+                                true -> Icon(
+                                    imageVector = Icons.Filled.Favorite,
+                                    contentDescription = "Favorite icon",
+                                    tint = Color.Red,
+                                    modifier = Modifier.size(24.dp).clickable {
+                                        memListVM.changeFavorite(it.first.hetekaId)
+                                    }
+                                )
+
+                                false -> Icon(
+                                    imageVector = Icons.Filled.FavoriteBorder,
+                                    contentDescription = "Favorite icon",
+                                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    modifier = Modifier.size(24.dp).clickable {
+                                        memListVM.changeFavorite(it.first.hetekaId)
+                                    }
+                                )
+                            }
                         }
                     }
                 }

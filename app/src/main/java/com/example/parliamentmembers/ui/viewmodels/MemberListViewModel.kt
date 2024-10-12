@@ -3,19 +3,14 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * MemberListViewModel is responsible for managing the list of Parliament Members
- * (PM) based on a selected type, which can be either "party" or "constituency".
- * This ViewModel fetches data from the data repository and tracks the favorite
- * status of each member.
- *
- * The ViewModel maintains two properties, `type` and `selectedType`, retrieved
- * from the saved state handle, along with a MutableStateFlow `_pmList` that
- * holds a list of pairs, where each pair consists of a ParliamentMember and a
- * Boolean indicating whether the member is marked as a favorite. The init block
- * triggers the initial loading of the member list by calling `getPMList()`,
- * which fetches members based on the type and selected type, emitting the list
- * to `_pmList`. The `changeFavorite()` function allows toggling the favorite
- * status of a member by their ID and refreshes the member list accordingly.
+ * MemberListViewModel is responsible for managing the state of
+ * the member list for the parliament members' screen. It retrieves
+ * member data from the DataRepository based on selected criteria
+ * (party or constituency), and maintains the state of the list
+ * along with the favorite status of each member.
+ * The ViewModel initializes by fetching the member list and
+ * provides functionality to toggle favorite status
+ * and update the state of image availability in local storage.
  */
 
 package com.example.parliamentmembers.ui.viewmodels
@@ -36,8 +31,12 @@ class MemberListViewModel(
 ) : ViewModel() {
     private var type: String? = savedStateHandle.get<String>("type")
     private var selectedType: String? = savedStateHandle.get<String>("selected")
+
     private val _pmList = MutableStateFlow<List<Pair<ParliamentMember, Boolean>>>(listOf())
+    private val _isImageOnLocalStates = MutableStateFlow<List<Boolean>?>(null)
+
     val pmList: StateFlow<List<Pair<ParliamentMember, Boolean>>> = _pmList
+    val isImageOnLocalStates: StateFlow<List<Boolean>?> = _isImageOnLocalStates
 
     init { getPMList() }
 
@@ -70,5 +69,15 @@ class MemberListViewModel(
     fun changeFavorite(id: Int) = viewModelScope.launch {
         dataRepo.toggleFavorite(id)
         getPMList()
+    }
+
+    fun updateImageState(index: Int, bool: Boolean) {
+        val currentStates = _isImageOnLocalStates.value?.toMutableList()
+        if (currentStates != null) {
+            if (index < currentStates.size) {
+                currentStates[index] = bool
+                _isImageOnLocalStates.value = currentStates
+            }
+        }
     }
 }

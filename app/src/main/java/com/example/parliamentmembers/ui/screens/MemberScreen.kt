@@ -3,13 +3,11 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * MemberScreen is a composable function that displays detailed information
- * about a selected parliament member in the ParliamentMembers application.
- * It retrieves data from the MemberViewModel and presents the member's image,
- * name, position, and other relevant details. The screen includes features
- * for marking a member as a favorite, adding notes, and linking to their
- * Twitter profile. The layout utilizes a vertical scroll for better
- * user experience and employs a top bar for navigation.
+ * MemberScreen is a composable function displaying the details
+ * of a selected parliament member, including their photo, personal information
+ * (like Heteka ID, seat number, party affiliation, etc.), and optional extra information
+ * such as constituency and a button to navigate to the their Twitter accounts on a browser.
+ * Users can mark the member as a favorite or edit their notes related to the member.
  */
 
 package com.example.parliamentmembers.ui.screens
@@ -17,6 +15,7 @@ package com.example.parliamentmembers.ui.screens
 import TopBar
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -76,6 +75,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import coil.request.ImageRequest
+import com.example.parliamentmembers.ui.components.CustomImageDisplay
 import com.example.parliamentmembers.ui.viewmodels.MemberViewModel
 
 @Composable
@@ -84,28 +84,22 @@ fun MemberScreen(
     memberVM: MemberViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val imgBaseUrl = "https://avoindata.eduskunta.fi/"
+
     val context = LocalContext.current
     val navBackStackEntry = navCtrl.currentBackStackEntryAsState()
     val scrollState = rememberScrollState()
+
     val member: ParliamentMember by memberVM.member.collectAsState()
     val memberExtra: ParliamentMemberExtra by memberVM.memberExtra.collectAsState()
     val memberLocal: ParliamentMemberLocal by memberVM.memberLocal.collectAsState()
-    val imgPainter = rememberAsyncImagePainter(
-        ImageRequest.Builder(context)
-            .data(data = "${imgBaseUrl}${member.pictureUrl}")
-            .apply<ImageRequest.Builder>(
-                block = fun ImageRequest.Builder.() {
-                    placeholder(R.drawable.ic_launcher_foreground)
-                    error(R.drawable.ic_launcher_foreground)
-                }
-            )
-            .build()
-    )
+    val isImageOnLocalStates: Boolean? by memberVM.isImageOnLocalStates.collectAsState()
 
     val boxColor = MaterialTheme.colorScheme.tertiaryContainer
     val onBoxColor = MaterialTheme.colorScheme.onTertiaryContainer
 
-    LaunchedEffect(navBackStackEntry) { memberVM.getData() }
+    LaunchedEffect(navBackStackEntry) {
+        memberVM.getData()
+    }
 
     Scaffold(
         topBar = {
@@ -131,11 +125,10 @@ fun MemberScreen(
                     .height(500.dp)
                     .clip(RoundedCornerShape(20.dp))
             ) {
-                Image(
-                    painter = imgPainter,
-                    contentDescription = "Image of Parliament Member",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                CustomImageDisplay(
+                    context = context,
+                    imageUrl = "$imgBaseUrl${member.pictureUrl}",
+                    onImageLoaded = { memberVM.updateImageState(it) }
                 )
 
                 Box(

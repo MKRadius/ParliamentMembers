@@ -3,13 +3,12 @@
  * Author: Khai Cao
  * Student ID: 2216586
  *
- * NoteScreen is a composable function that allows users to view, edit,
- * and delete notes related to a specific parliament member in the
- * ParliamentMembers application. It utilizes the NoteViewModel to
- * retrieve and manage note data. The screen features a text field for
- * editing notes, a save button to save changes, and a delete button
- * to remove existing notes. The layout adapts to user input and
- * ensures smooth navigation back to the previous screen.
+ * NoteScreen is a composable function representing the note screen
+ * for editing and managing notes related to a parliament member.
+ * It retrieves the existing note from the ViewModel and allows users
+ * to edit and save changes. The screen also provides options to
+ * delete the note if it exists. Navigation actions are handled
+ * to return to the previous screen after saving or deleting the note.
  */
 
 package com.example.parliamentmembers.ui.screens
