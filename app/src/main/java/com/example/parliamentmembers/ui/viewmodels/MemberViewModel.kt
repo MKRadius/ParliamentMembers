@@ -4,8 +4,8 @@
  * Student ID: 2216586
  *
  * MemberViewModel is responsible for managing the state of a parliament member's details,
- * including fetching and holding member data, additional information, local state (favorite status and notes),
- * and the image state. The ViewModel retrieves data from the repository when initialized
+ * including fetching and holding member data, additional information, local state
+ * (favorite status and notes). The ViewModel retrieves data from the repository when initialized
  * and provides state flows for the UI to observe changes in member details.
  */
 
@@ -54,12 +54,10 @@ class MemberViewModel(
             note = null
         )
     )
-    private val _isImageOnLocalStates = MutableStateFlow<Boolean>(false)
 
     val member: StateFlow<ParliamentMember> = _member
     val memberExtra: StateFlow<ParliamentMemberExtra> = _memberExtra
     val memberLocal: StateFlow<ParliamentMemberLocal> = _memberLocal
-    val isImageOnLocalStates: StateFlow<Boolean> = _isImageOnLocalStates
 
     init { getData() }
 
@@ -90,6 +88,4 @@ class MemberViewModel(
         dataRepo.toggleFavorite(id)
         fetchMemberLocal()
     }
-
-    fun updateImageState(bool: Boolean) { _isImageOnLocalStates.value = bool }
 }

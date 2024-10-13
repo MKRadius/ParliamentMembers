@@ -74,6 +74,7 @@ The app follows MVVM (Model-View-ViewModel) architecture:
 - **Unit Tests**: Write unit tests for ViewModels and Repositories to ensure correctness.
 - **Error Handling**: Implement better error handling and UI feedback for network failures.
 - **Animations**: Add animations to make the UI more engaging and interactive.
+- **Storage cleanup**: Implement a mechanism to clean up unused images and data from the local storage.
 
 ---
 

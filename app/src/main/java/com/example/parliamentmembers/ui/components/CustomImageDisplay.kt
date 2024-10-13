@@ -5,8 +5,8 @@
  *
  * Composable function that displays an image from a local or remote source.
  * If the image is available locally, it is loaded using Coil.
- * If not, the image is downloaded from a provided URL, saved locally,
- * and the loading state is communicated via a callback.
+ * If not, the image is at the same time loaded with Coil and
+ * saved to local storage
  */
 
 package com.example.parliamentmembers.ui.components
@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 fun CustomImageDisplay(
     context: Context,
     imageUrl: String,
-    onImageLoaded: (Boolean) -> Unit
 ) {
     val localImage = remember { getImageFromLocal(context, imageUrl) }
 
@@ -60,12 +59,10 @@ fun CustomImageDisplay(
                             CoroutineScope(Dispatchers.IO).launch {
                                 val bitmap = (result.drawable as BitmapDrawable).bitmap
                                 downloadImageToLocal(context, bitmap, imageUrl.substringAfterLast('/'))
-                                onImageLoaded(true)
                             }
                         },
                         onError = { _, throwable ->
                             Log.e("DBG", "Error in building ImageRequest: $throwable")
-                            onImageLoaded(false)
                         }
                     )
                 }

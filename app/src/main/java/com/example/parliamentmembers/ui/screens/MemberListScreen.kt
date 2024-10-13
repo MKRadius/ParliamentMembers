@@ -68,14 +68,8 @@ fun MemberListScreen(
     val selectedType = backStackEntry.arguments?.getString("selected") ?: "Members"
 
     val pmList: List<Pair<ParliamentMember, Boolean>> by memListVM.pmList.collectAsState()
-    val isImageOnLocalStates by memListVM.isImageOnLocalStates.collectAsState()
 
-    LaunchedEffect(navBackStackEntry) {
-        memListVM.getPMList()
-        if (isImageOnLocalStates?.isEmpty() == true) {
-            memListVM.updateImageState(0, false)
-        }
-    }
+    LaunchedEffect(navBackStackEntry) { memListVM.getPMList() }
 
     Scaffold(
         topBar = {
@@ -129,9 +123,6 @@ fun MemberListScreen(
                                 CustomImageDisplay(
                                     context = LocalContext.current,
                                     imageUrl = "$imgBaseUrl${it.first.pictureUrl}",
-                                    onImageLoaded = { newImageOnLocalBool ->
-                                        memListVM.updateImageState(pmList.indexOf(it), newImageOnLocalBool)
-                                    }
                                 )
                             }
 

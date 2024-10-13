@@ -92,14 +92,11 @@ fun MemberScreen(
     val member: ParliamentMember by memberVM.member.collectAsState()
     val memberExtra: ParliamentMemberExtra by memberVM.memberExtra.collectAsState()
     val memberLocal: ParliamentMemberLocal by memberVM.memberLocal.collectAsState()
-    val isImageOnLocalStates: Boolean? by memberVM.isImageOnLocalStates.collectAsState()
 
     val boxColor = MaterialTheme.colorScheme.tertiaryContainer
     val onBoxColor = MaterialTheme.colorScheme.onTertiaryContainer
 
-    LaunchedEffect(navBackStackEntry) {
-        memberVM.getData()
-    }
+    LaunchedEffect(navBackStackEntry) { memberVM.getData() }
 
     Scaffold(
         topBar = {
@@ -128,7 +125,6 @@ fun MemberScreen(
                 CustomImageDisplay(
                     context = context,
                     imageUrl = "$imgBaseUrl${member.pictureUrl}",
-                    onImageLoaded = { memberVM.updateImageState(it) }
                 )
 
                 Box(
