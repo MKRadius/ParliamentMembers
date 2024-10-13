@@ -23,13 +23,13 @@
 - **Coroutines & Flow**: For managing background tasks and asynchronous operations
 
 ## Screenshots
-| ![Screenshot 1](images/screenshot_0.jpg) | ![Screenshot 2](images/screenshot_1.jpg) | ![Screenshot 3](images/screenshot_2.jpg) |
-|:------------------------------------:|:------------------------------------:|:------------------------------------:|
-| Home screen | Dark mode| Member list |
+| ![Screenshot 1](images/screenshot_0.jpg) | ![Screenshot 2](images/screenshot_1.jpg) | ![Screenshot 3](images/screenshot_2.jpg) | ![Screenshot 4](images/screenshot_3.jpg) | ![Screenshot 5](images/screenshot_4.jpg) |
+|:------------------------------------:|:------------------------------------:|:------------------------------------:|:------------------------------------:|:------------------------------------:|
+| Home screen | Dark mode | Member list | Member details screen | Note editing screen |
 
-| ![Screenshot 4](images/screenshot_3.jpg) | ![Screenshot 5](images/screenshot_4.jpg) |
-|:------------------------------------:|:------------------------------------:|
-| Member details screen | Note editing screen |
+
+
+
   
 ## Installation
 
